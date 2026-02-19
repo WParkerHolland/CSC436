@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Feb 18, 2026 at 11:19 AM
+-- Generation Time: Feb 19, 2026 at 07:48 AM
 -- Server version: 5.7.44-48
 -- PHP Version: 8.3.26
 
@@ -37,6 +37,22 @@ CREATE TABLE `Characters` (
   `partyNotes` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `Characters`
+--
+
+INSERT INTO `Characters` (`ID`, `isAt`, `name`, `race`, `description`, `gmNotes`, `partyNotes`) VALUES
+(1, 2, 'Wilhelm Riquet', 'human', 'thief', 'Passion for animals', 'Played by Steve'),
+(2, 4, 'Commodore Stephahk', 'human', 'Recruitment officer at Fort Hranic', 'Rat who let attackers into fort', 'Weirdly chill guy'),
+(3, 4, 'Renly Gokel', 'human', 'Recruit specializing in alchemy', 'Harmless?', 'He is an evil terrorist'),
+(4, 2, 'Horacio Garzon', 'human', 'wine artisan', 'Passion for grapes', 'Played by George'),
+(5, 2, 'Jovi', 'Ka’Tavin', 'Animal sold in Siwanilua', 'Will be used to train ‘Ride’ skill', 'Bought by Wilhelm'),
+(6, 4, 'Olver Thumbless', 'human', 'Recruit who has no thumbs', 'Dies in Hranic Raid', 'His name is now ‘Nubs’'),
+(7, 5, 'Xiarkydoth', 'spider', 'Spider in Myrantahl Forests', 'Beast Aliyra encounters?', ''),
+(8, 2, 'Leon Septar', 'human', 'Bouncer, detective', 'Passion for sneaking', 'Played by Henry'),
+(9, 5, 'Aliyra Maastehr', 'ghord', 'Apothecary from Ghordeiol', 'Wife to Ephram and Mother to Obram and Ilen', ''),
+(10, 4, 'Chef Mya', 'human', 'Chef at Fort Hranic', 'Head chef', 'Falls in love with Wilhelm');
+
 -- --------------------------------------------------------
 
 --
@@ -48,6 +64,18 @@ CREATE TABLE `Contains` (
   `containee` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `Contains`
+--
+
+INSERT INTO `Contains` (`container`, `containee`) VALUES
+(6, 1),
+(6, 2),
+(6, 3),
+(6, 4),
+(6, 5),
+(4, 7);
+
 -- --------------------------------------------------------
 
 --
@@ -58,6 +86,14 @@ CREATE TABLE `Creatures` (
   `ID` int(11) NOT NULL,
   `population` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `Creatures`
+--
+
+INSERT INTO `Creatures` (`ID`, `population`) VALUES
+(5, 1),
+(7, 1);
 
 -- --------------------------------------------------------
 
@@ -73,6 +109,20 @@ CREATE TABLE `Locations` (
   `partyNotes` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `Locations`
+--
+
+INSERT INTO `Locations` (`ID`, `name`, `description`, `gmNotes`, `partyNotes`) VALUES
+(1, 'Kua Loranta', 'Desert nation ruled by the Kua Lorantene peoples', 'Under control of the foreign power Hrace', 'People have venomous spikes'),
+(2, 'Siwanilua', 'Wealthy city ruled by Queen Yttrilyna', 'Hrace has soft control over the Queen', 'The royalty are rich but the people are poor'),
+(3, 'Hanging Gardens of Azkenilua', 'Wonder built to the Goddess Azkenilua', 'Pilgrimage site', 'They do not grow grapes here'),
+(4, 'Hranic Fort', 'Military island off the coast of Kua Loranta', 'Session start. Raided by Kua Lorantene attackers', 'Renly is here and he must be dangerous…'),
+(5, 'Ghordeiol', 'Northern country also soft controlled by Hrace', 'Potential site for future campaigns', ''),
+(6, 'The World', 'This is the big world that contains everything', 'The good and evil happens here', ''),
+(7, 'Barracks', 'Barracks in a fort, weapons and stuff', '', ''),
+(8, 'Completely Unrelated World', 'This world doesn\'t have anything yet', '', '');
+
 -- --------------------------------------------------------
 
 --
@@ -83,6 +133,17 @@ CREATE TABLE `NPCs` (
   `ID` int(11) NOT NULL,
   `opinions` varchar(1000) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `NPCs`
+--
+
+INSERT INTO `NPCs` (`ID`, `opinions`) VALUES
+(2, 'Cooperative with Hrace, indifferent to recruits'),
+(3, 'Friendly facade, secretly plotting destruction'),
+(6, 'Eager to prove himself despite disability'),
+(9, 'Caring and knowledgeable, misses her family'),
+(10, 'Warm and welcoming, develops feelings for Wilhelm');
 
 -- --------------------------------------------------------
 
@@ -96,6 +157,15 @@ CREATE TABLE `Players` (
   `playedBy` varchar(50) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `Players`
+--
+
+INSERT INTO `Players` (`ID`, `level`, `playedBy`) VALUES
+(1, 3, 'Steve'),
+(4, 3, 'George'),
+(8, 3, 'Henry');
+
 -- --------------------------------------------------------
 
 --
@@ -104,10 +174,21 @@ CREATE TABLE `Players` (
 
 CREATE TABLE `PlayingIn` (
   `user` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `plays` int(11) NOT NULL,
+  `plays` int(11) DEFAULT NULL,
   `world` int(11) NOT NULL,
   `role` enum('gm','player') COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `PlayingIn`
+--
+
+INSERT INTO `PlayingIn` (`user`, `plays`, `world`, `role`) VALUES
+('Steve', 1, 6, 'player'),
+('George', 4, 6, 'player'),
+('Henry', 8, 6, 'player'),
+('George', NULL, 8, 'gm'),
+('GM Individual', NULL, 6, 'gm');
 
 -- --------------------------------------------------------
 
@@ -128,6 +209,17 @@ CREATE TABLE `Props` (
   `owner` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `Props`
+--
+
+INSERT INTO `Props` (`ID`, `isIn`, `name`, `description`, `gmNotes`, `partyNotes`, `itemType`, `rarity`, `quantity`, `owner`) VALUES
+(1, 2, 'Venom Spike', 'A spike harvested from a Kua Lorantene warrior', 'Can be used as a poison weapon', 'Found in Siwanilua market', 'Weapon', 'Uncommon', 3, 1),
+(2, 4, 'Alchemy Kit', 'A set of tools for brewing potions', 'Belongs to Renly', 'Confiscated after the raid', 'Tool', 'Common', 1, 3),
+(3, 2, 'Grape Wine', 'A fine bottle of Siwaniluan wine', 'Horacio made this himself', 'Worth good money', 'Consumable', 'Common', 5, 4),
+(4, 4, 'Fort Manifest', 'A list of all recruits at Hranic Fort', 'Contains evidence against Stephahk', 'We need to get this', 'Document', 'Rare', 1, 2),
+(5, 1, 'Desert Cloak', 'A cloak that blends into sand', 'Useful for desert travel', 'Bought in Kua Loranta', 'Armor', 'Common', 1, 8);
+
 -- --------------------------------------------------------
 
 --
@@ -138,6 +230,17 @@ CREATE TABLE `Users` (
   `username` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `password` varchar(50) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `Users`
+--
+
+INSERT INTO `Users` (`username`, `password`) VALUES
+('George', 'password456'),
+('GM Individual', 'password000'),
+('Henry', 'password789'),
+('No Friends Larry', 'password000'),
+('Steve', 'password123');
 
 --
 -- Indexes for dumped tables
@@ -212,19 +315,19 @@ ALTER TABLE `Users`
 -- AUTO_INCREMENT for table `Characters`
 --
 ALTER TABLE `Characters`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `Locations`
 --
 ALTER TABLE `Locations`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `Props`
 --
 ALTER TABLE `Props`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables
