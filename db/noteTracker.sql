@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Feb 19, 2026 at 07:48 AM
+-- Generation Time: Feb 26, 2026 at 09:49 AM
 -- Server version: 5.7.44-48
 -- PHP Version: 8.3.26
 
@@ -98,6 +98,21 @@ INSERT INTO `Creatures` (`ID`, `population`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Stand-in structure for view `dm_inventory_view`
+-- (See below for the actual view)
+--
+CREATE TABLE `dm_inventory_view` (
+`OwnerName` varchar(50)
+,`ItemName` varchar(50)
+,`ItemType` varchar(50)
+,`ItemDescription` varchar(1000)
+,`ItemNotes` varchar(1000)
+,`QuantityOwned` int(11)
+);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `Locations`
 --
 
@@ -165,6 +180,20 @@ INSERT INTO `Players` (`ID`, `level`, `playedBy`) VALUES
 (1, 3, 'Steve'),
 (4, 3, 'George'),
 (8, 3, 'Henry');
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `player_NPC_view`
+-- (See below for the actual view)
+--
+CREATE TABLE `player_NPC_view` (
+`Name` varchar(50)
+,`Race` varchar(50)
+,`Description` varchar(1000)
+,`Notes` varchar(1000)
+,`Location` varchar(50)
+);
 
 -- --------------------------------------------------------
 
@@ -328,6 +357,24 @@ ALTER TABLE `Locations`
 --
 ALTER TABLE `Props`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `dm_inventory_view`
+--
+DROP TABLE IF EXISTS `dm_inventory_view`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`parkerholland04`@`localhost` SQL SECURITY DEFINER VIEW `dm_inventory_view`  AS SELECT `Characters`.`name` AS `OwnerName`, `Props`.`name` AS `ItemName`, `Props`.`itemType` AS `ItemType`, `Props`.`description` AS `ItemDescription`, `Props`.`gmNotes` AS `ItemNotes`, `Props`.`quantity` AS `QuantityOwned` FROM (`Characters` join `Props`) WHERE (`Props`.`owner` = `Characters`.`ID`) ORDER BY `Characters`.`name` ASC ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `player_NPC_view`
+--
+DROP TABLE IF EXISTS `player_NPC_view`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`parkerholland04`@`localhost` SQL SECURITY DEFINER VIEW `player_NPC_view`  AS SELECT `Characters`.`name` AS `Name`, `Characters`.`race` AS `Race`, `Characters`.`description` AS `Description`, `Characters`.`partyNotes` AS `Notes`, `Locations`.`name` AS `Location` FROM (`Characters` join `Locations`) WHERE ((`Characters`.`isAt` = `Locations`.`ID`) AND (not(`Characters`.`ID` in (select `Players`.`ID` from `Players`)))) ORDER BY `Locations`.`name` ASC ;
 
 --
 -- Constraints for dumped tables
