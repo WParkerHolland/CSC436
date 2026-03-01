@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Feb 26, 2026 at 09:49 AM
+-- Generation Time: Feb 28, 2026 at 09:07 PM
 -- Server version: 5.7.44-48
 -- PHP Version: 8.3.26
 
@@ -293,7 +293,7 @@ ALTER TABLE `Contains`
 -- Indexes for table `Creatures`
 --
 ALTER TABLE `Creatures`
-  ADD KEY `isCreature` (`ID`);
+  ADD PRIMARY KEY (`ID`);
 
 --
 -- Indexes for table `Locations`
@@ -305,13 +305,13 @@ ALTER TABLE `Locations`
 -- Indexes for table `NPCs`
 --
 ALTER TABLE `NPCs`
-  ADD KEY `isNPC` (`ID`);
+  ADD PRIMARY KEY (`ID`);
 
 --
 -- Indexes for table `Players`
 --
 ALTER TABLE `Players`
-  ADD KEY `isPlayer` (`ID`),
+  ADD PRIMARY KEY (`ID`),
   ADD KEY `playedBy` (`playedBy`);
 
 --
