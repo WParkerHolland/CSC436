@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Feb 28, 2026 at 09:07 PM
+-- Generation Time: Mar 01, 2026 at 06:26 PM
 -- Server version: 5.7.44-48
 -- PHP Version: 8.3.26
 
@@ -69,12 +69,12 @@ CREATE TABLE `Contains` (
 --
 
 INSERT INTO `Contains` (`container`, `containee`) VALUES
+(4, 7),
 (6, 1),
 (6, 2),
 (6, 3),
 (6, 4),
-(6, 5),
-(4, 7);
+(6, 5);
 
 -- --------------------------------------------------------
 
@@ -286,8 +286,8 @@ ALTER TABLE `Characters`
 -- Indexes for table `Contains`
 --
 ALTER TABLE `Contains`
-  ADD KEY `container` (`container`),
-  ADD KEY `containee` (`containee`);
+  ADD PRIMARY KEY (`containee`),
+  ADD KEY `container` (`container`);
 
 --
 -- Indexes for table `Creatures`
