@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Mar 01, 2026 at 06:26 PM
+-- Generation Time: Mar 27, 2026 at 02:49 PM
 -- Server version: 5.7.44-48
 -- PHP Version: 8.3.26
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `parkerho_noteTracker`
+-- Database: `loganmcc_scribe`
 --
 
 -- --------------------------------------------------------
@@ -51,7 +51,8 @@ INSERT INTO `Characters` (`ID`, `isAt`, `name`, `race`, `description`, `gmNotes`
 (7, 5, 'Xiarkydoth', 'spider', 'Spider in Myrantahl Forests', 'Beast Aliyra encounters?', ''),
 (8, 2, 'Leon Septar', 'human', 'Bouncer, detective', 'Passion for sneaking', 'Played by Henry'),
 (9, 5, 'Aliyra Maastehr', 'ghord', 'Apothecary from Ghordeiol', 'Wife to Ephram and Mother to Obram and Ilen', ''),
-(10, 4, 'Chef Mya', 'human', 'Chef at Fort Hranic', 'Head chef', 'Falls in love with Wilhelm');
+(10, 4, 'Chef Mya', 'human', 'Chef at Fort Hranic', 'Head chef', 'Falls in love with Wilhelm'),
+(11, 2, 'Katka', 'Wajin', 'A cat like creatures with ivory tusks and four eyes', 'Hitsens Wajin', 'Cool cat that we must obtain');
 
 -- --------------------------------------------------------
 
@@ -84,31 +85,18 @@ INSERT INTO `Contains` (`container`, `containee`) VALUES
 
 CREATE TABLE `Creatures` (
   `ID` int(11) NOT NULL,
-  `population` int(11) NOT NULL
+  `population` int(11) NOT NULL,
+  `ability` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `Creatures`
 --
 
-INSERT INTO `Creatures` (`ID`, `population`) VALUES
-(5, 1),
-(7, 1);
-
--- --------------------------------------------------------
-
---
--- Stand-in structure for view `dm_inventory_view`
--- (See below for the actual view)
---
-CREATE TABLE `dm_inventory_view` (
-`OwnerName` varchar(50)
-,`ItemName` varchar(50)
-,`ItemType` varchar(50)
-,`ItemDescription` varchar(1000)
-,`ItemNotes` varchar(1000)
-,`QuantityOwned` int(11)
-);
+INSERT INTO `Creatures` (`ID`, `population`, `ability`) VALUES
+(5, 1, 'Pincer Tail Attack'),
+(7, 1, 'Sticky Web Grab'),
+(11, 1000, 'Jumping Claw Grab');
 
 -- --------------------------------------------------------
 
@@ -146,19 +134,20 @@ INSERT INTO `Locations` (`ID`, `name`, `description`, `gmNotes`, `partyNotes`) V
 
 CREATE TABLE `NPCs` (
   `ID` int(11) NOT NULL,
-  `opinions` varchar(1000) COLLATE utf8_unicode_ci NOT NULL
+  `opinions` varchar(1000) COLLATE utf8_unicode_ci NOT NULL,
+  `occupation` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `NPCs`
 --
 
-INSERT INTO `NPCs` (`ID`, `opinions`) VALUES
-(2, 'Cooperative with Hrace, indifferent to recruits'),
-(3, 'Friendly facade, secretly plotting destruction'),
-(6, 'Eager to prove himself despite disability'),
-(9, 'Caring and knowledgeable, misses her family'),
-(10, 'Warm and welcoming, develops feelings for Wilhelm');
+INSERT INTO `NPCs` (`ID`, `opinions`, `occupation`) VALUES
+(2, 'Cooperative with Hrace, indifferent to recruits', 'Military Recruit Commander'),
+(3, 'Friendly facade, secretly plotting destruction', 'Alchemist in Training'),
+(6, 'Eager to prove himself despite disability', 'Chef in Training'),
+(9, 'Caring and knowledgeable, misses her family', 'Apothecary'),
+(10, 'Warm and welcoming, develops feelings for Wilhelm', 'Chef');
 
 -- --------------------------------------------------------
 
@@ -169,31 +158,32 @@ INSERT INTO `NPCs` (`ID`, `opinions`) VALUES
 CREATE TABLE `Players` (
   `ID` int(11) NOT NULL,
   `level` int(11) NOT NULL,
-  `playedBy` varchar(50) COLLATE utf8_unicode_ci NOT NULL
+  `playedBy` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `combat_style` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `Players`
 --
 
-INSERT INTO `Players` (`ID`, `level`, `playedBy`) VALUES
-(1, 3, 'Steve'),
-(4, 3, 'George'),
-(8, 3, 'Henry');
+INSERT INTO `Players` (`ID`, `level`, `playedBy`, `combat_style`) VALUES
+(1, 3, 'Steve', 'Hracian Street Rat'),
+(4, 3, 'George', 'Hracian Recruit'),
+(8, 3, 'Henry', 'Hracian Bad Cop');
 
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `player_NPC_view`
--- (See below for the actual view)
+-- Table structure for table `player_NPC_view`
 --
+
 CREATE TABLE `player_NPC_view` (
-`Name` varchar(50)
-,`Race` varchar(50)
-,`Description` varchar(1000)
-,`Notes` varchar(1000)
-,`Location` varchar(50)
-);
+  `Name` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `Race` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `Description` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `Notes` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `Location` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -344,7 +334,7 @@ ALTER TABLE `Users`
 -- AUTO_INCREMENT for table `Characters`
 --
 ALTER TABLE `Characters`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `Locations`
@@ -357,75 +347,6 @@ ALTER TABLE `Locations`
 --
 ALTER TABLE `Props`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
--- --------------------------------------------------------
-
---
--- Structure for view `dm_inventory_view`
---
-DROP TABLE IF EXISTS `dm_inventory_view`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`parkerholland04`@`localhost` SQL SECURITY DEFINER VIEW `dm_inventory_view`  AS SELECT `Characters`.`name` AS `OwnerName`, `Props`.`name` AS `ItemName`, `Props`.`itemType` AS `ItemType`, `Props`.`description` AS `ItemDescription`, `Props`.`gmNotes` AS `ItemNotes`, `Props`.`quantity` AS `QuantityOwned` FROM (`Characters` join `Props`) WHERE (`Props`.`owner` = `Characters`.`ID`) ORDER BY `Characters`.`name` ASC ;
-
--- --------------------------------------------------------
-
---
--- Structure for view `player_NPC_view`
---
-DROP TABLE IF EXISTS `player_NPC_view`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`parkerholland04`@`localhost` SQL SECURITY DEFINER VIEW `player_NPC_view`  AS SELECT `Characters`.`name` AS `Name`, `Characters`.`race` AS `Race`, `Characters`.`description` AS `Description`, `Characters`.`partyNotes` AS `Notes`, `Locations`.`name` AS `Location` FROM (`Characters` join `Locations`) WHERE ((`Characters`.`isAt` = `Locations`.`ID`) AND (not(`Characters`.`ID` in (select `Players`.`ID` from `Players`)))) ORDER BY `Locations`.`name` ASC ;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `Characters`
---
-ALTER TABLE `Characters`
-  ADD CONSTRAINT `isAt` FOREIGN KEY (`isAt`) REFERENCES `Locations` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `Contains`
---
-ALTER TABLE `Contains`
-  ADD CONSTRAINT `containee` FOREIGN KEY (`containee`) REFERENCES `Locations` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `container` FOREIGN KEY (`container`) REFERENCES `Locations` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `Creatures`
---
-ALTER TABLE `Creatures`
-  ADD CONSTRAINT `isCreature` FOREIGN KEY (`ID`) REFERENCES `Characters` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `NPCs`
---
-ALTER TABLE `NPCs`
-  ADD CONSTRAINT `isNPC` FOREIGN KEY (`ID`) REFERENCES `Characters` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `Players`
---
-ALTER TABLE `Players`
-  ADD CONSTRAINT `isPlayer` FOREIGN KEY (`ID`) REFERENCES `Characters` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `playedBy` FOREIGN KEY (`playedBy`) REFERENCES `Users` (`username`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `PlayingIn`
---
-ALTER TABLE `PlayingIn`
-  ADD CONSTRAINT `inWorld` FOREIGN KEY (`world`) REFERENCES `Locations` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `plays` FOREIGN KEY (`plays`) REFERENCES `Characters` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `user` FOREIGN KEY (`user`) REFERENCES `Users` (`username`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `Props`
---
-ALTER TABLE `Props`
-  ADD CONSTRAINT `isIn` FOREIGN KEY (`isIn`) REFERENCES `Locations` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `ownedBy` FOREIGN KEY (`owner`) REFERENCES `Characters` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
