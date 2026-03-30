@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Mar 30, 2026 at 10:41 AM
+-- Generation Time: Mar 30, 2026 at 11:27 AM
 -- Server version: 5.7.44-48
 -- PHP Version: 8.3.26
 
@@ -21,17 +21,353 @@ SET time_zone = "+00:00";
 -- Database: `jacobale_scribe`
 --
 
+-- --------------------------------------------------------
+
 --
--- VIEW `player_NPC_view`
--- Data: None
+-- Table structure for table `Characters`
 --
 
+CREATE TABLE `Characters` (
+  `ID` int(11) NOT NULL,
+  `isAt` int(11) NOT NULL,
+  `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `race` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `description` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `gmNotes` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `partyNotes` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `Characters`
+--
+
+INSERT INTO `Characters` (`ID`, `isAt`, `name`, `race`, `description`, `gmNotes`, `partyNotes`) VALUES
+(1, 2, 'Wilhelm Riquet', 'human', 'thief', 'Passion for animals', 'Played by Steve'),
+(2, 4, 'Commodore Stephahk', 'human', 'Recruitment officer at Fort Hranic', 'Rat who let attackers into fort', 'Weirdly chill guy'),
+(3, 4, 'Renly Gokel', 'human', 'Recruit specializing in alchemy', 'Harmless?', 'He is an evil terrorist'),
+(4, 2, 'Horacio Garzon', 'human', 'wine artisan', 'Passion for grapes', 'Played by George'),
+(5, 2, 'Jovi', 'Ka’Tavin', 'Animal sold in Siwanilua', 'Will be used to train ‘Ride’ skill', 'Bought by Wilhelm'),
+(6, 4, 'Olver Thumbless', 'human', 'Recruit who has no thumbs', 'Dies in Hranic Raid', 'His name is now ‘Nubs’'),
+(7, 5, 'Xiarkydoth', 'spider', 'Spider in Myrantahl Forests', 'Beast Aliyra encounters?', 'Hostile forest creature, dangerous but avoidable'),
+(8, 2, 'Leon Septar', 'human', 'Bouncer, detective', 'Passion for sneaking', 'Played by Henry'),
+(9, 5, 'Aliyra Maastehr', 'ghord', 'Apothecary from Ghordeiol', 'Wife to Ephram and Mother to Obram and Ilen', 'Helpful apothecary, potential ally for potions and healing'),
+(10, 4, 'Chef Mya', 'human', 'Chef at Fort Hranic', 'Head chef', 'Falls in love with Wilhelm'),
+(11, 2, 'Katka', 'Wajin', 'A cat like creatures with ivory tusks and four eyes', 'Hitsens Wajin', 'Cool cat that we must obtain'),
+(13, 2, 'Bram Ironfist', 'dwarf', 'Blacksmith in Fort Hranic', 'Provides weapons to guards', 'Gruff but reliable'),
+(14, 3, 'Lysa Windmere', 'human', 'Traveling merchant', 'Knows trade routes', 'Often visits taverns'),
+(15, 5, 'Torren Vale', 'elf', 'Forest scout', 'Watches for threats in Myrantahl Forest', 'Quiet and observant');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Contains`
+--
+
+CREATE TABLE `Contains` (
+  `container` int(11) NOT NULL,
+  `containee` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `Contains`
+--
+
+INSERT INTO `Contains` (`container`, `containee`) VALUES
+(4, 7),
+(6, 1),
+(6, 2),
+(6, 3),
+(6, 4),
+(6, 5);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Creatures`
+--
+
+CREATE TABLE `Creatures` (
+  `ID` int(11) NOT NULL,
+  `population` int(11) NOT NULL,
+  `ability` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `Creatures`
+--
+
+INSERT INTO `Creatures` (`ID`, `population`, `ability`) VALUES
+(5, 1, 'Pincer Tail Attack'),
+(7, 1, 'Sticky Web Grab'),
+(11, 1000, 'Jumping Claw Grab'),
+(15, 30, 'Bite Attack'),
+(16, 10, 'Venom Strike'),
+(17, 60, 'Camouflage');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Locations`
+--
+
+CREATE TABLE `Locations` (
+  `ID` int(11) NOT NULL,
+  `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `description` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `gmNotes` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `partyNotes` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `Locations`
+--
+
+INSERT INTO `Locations` (`ID`, `name`, `description`, `gmNotes`, `partyNotes`) VALUES
+(1, 'Kua Loranta', 'Desert nation ruled by the Kua Lorantene peoples', 'Under control of the foreign power Hrace', 'People have venomous spikes'),
+(2, 'Siwanilua', 'Wealthy city ruled by Queen Yttrilyna', 'Hrace has soft control over the Queen', 'The royalty are rich but the people are poor'),
+(3, 'Hanging Gardens of Azkenilua', 'Wonder built to the Goddess Azkenilua', 'Pilgrimage site', 'They do not grow grapes here'),
+(4, 'Hranic Fort', 'Military island off the coast of Kua Loranta', 'Session start. Raided by Kua Lorantene attackers', 'Renly is here and he must be dangerous…'),
+(5, 'Ghordeiol', 'Northern country also soft controlled by Hrace', 'Potential site for future campaigns', ''),
+(6, 'The World', 'This is the big world that contains everything', 'The good and evil happens here', ''),
+(7, 'Barracks', 'Barracks in a fort, weapons and stuff', '', ''),
+(8, 'Completely Unrelated World', 'This world doesn\'t have anything yet', '', '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `NPCs`
+--
+
+CREATE TABLE `NPCs` (
+  `ID` int(11) NOT NULL,
+  `opinions` varchar(1000) COLLATE utf8_unicode_ci NOT NULL,
+  `occupation` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `NPCs`
+--
+
+INSERT INTO `NPCs` (`ID`, `opinions`, `occupation`) VALUES
+(2, 'Cooperative with Hrace, indifferent to recruits', 'Military Recruit Commander'),
+(3, 'Friendly facade, secretly plotting destruction', 'Alchemist in Training'),
+(6, 'Eager to prove himself despite disability', 'Chef in Training'),
+(9, 'Caring and knowledgeable, misses her family', 'Apothecary'),
+(10, 'Warm and welcoming, develops feelings for Wilhelm', 'Chef'),
+(11, 'Strict but fair leader of the guards', 'Guard Captain'),
+(12, 'Kind healer who helps the poor', 'Healer');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Players`
+--
+
+CREATE TABLE `Players` (
+  `ID` int(11) NOT NULL,
+  `level` int(11) NOT NULL,
+  `playedBy` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `combat_style` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `Players`
+--
+
+INSERT INTO `Players` (`ID`, `level`, `playedBy`, `combat_style`) VALUES
+(1, 3, 'Steve', 'Hracian Street Rat'),
+(4, 3, 'George', 'Hracian Recruit'),
+(8, 3, 'Henry', 'Hracian Bad Cop');
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `player_NPC_view`
+-- (See below for the actual view)
+--
+CREATE TABLE `player_NPC_view` (
+`Name` varchar(50)
+,`Race` varchar(50)
+,`Description` varchar(1000)
+,`Notes` varchar(1000)
+,`Location` varchar(50)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `PlayingIn`
+--
+
+CREATE TABLE `PlayingIn` (
+  `user` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `plays` int(11) DEFAULT NULL,
+  `world` int(11) NOT NULL,
+  `role` enum('gm','player') COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `PlayingIn`
+--
+
+INSERT INTO `PlayingIn` (`user`, `plays`, `world`, `role`) VALUES
+('Steve', 1, 6, 'player'),
+('George', 4, 6, 'player'),
+('Henry', 8, 6, 'player'),
+('George', NULL, 8, 'gm'),
+('GM Individual', NULL, 6, 'gm');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Props`
+--
+
+CREATE TABLE `Props` (
+  `ID` int(11) NOT NULL,
+  `isIn` int(11) DEFAULT NULL,
+  `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `description` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `gmNotes` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `partyNotes` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `itemType` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `rarity` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `quantity` int(11) NOT NULL DEFAULT '1',
+  `owner` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `Props`
+--
+
+INSERT INTO `Props` (`ID`, `isIn`, `name`, `description`, `gmNotes`, `partyNotes`, `itemType`, `rarity`, `quantity`, `owner`) VALUES
+(1, 2, 'Venom Spike', 'A spike harvested from a Kua Lorantene warrior', 'Can be used as a poison weapon', 'Found in Siwanilua market', 'Weapon', 'Uncommon', 3, 1),
+(2, 4, 'Alchemy Kit', 'A set of tools for brewing potions', 'Belongs to Renly', 'Confiscated after the raid', 'Tool', 'Common', 1, 3),
+(3, 2, 'Grape Wine', 'A fine bottle of Siwaniluan wine', 'Horacio made this himself', 'Worth good money', 'Consumable', 'Common', 5, 4),
+(4, 4, 'Fort Manifest', 'A list of all recruits at Hranic Fort', 'Contains evidence against Stephahk', 'We need to get this', 'Document', 'Rare', 1, 2),
+(5, 1, 'Desert Cloak', 'A cloak that blends into sand', 'Useful for desert travel', 'Bought in Kua Loranta', 'Armor', 'Common', 1, 8),
+(6, 4, 'Iron Sword', 'Standard weapon used by guards', 'Standard issue weapon kept in the fort armory', 'Useful if we need extra weapons', 'Weapon', 'Common', 1, 1),
+(7, 4, 'Healing Potion', 'Restores minor injuries', 'Stored by the fort medic', 'Can help after a fight', 'Consumable', 'Common', 1, 8),
+(8, 2, 'Travel Cloak', 'Protects against weather', 'Common travel gear sold by merchants', 'Good for long trips', 'Armor', 'Common', 1, NULL),
+(9, 4, 'Lantern', 'Provides light in dark areas', 'Used by guards and scouts at night', 'Helps light dark areas', 'Tool', 'Common', 2, NULL),
+(10, 4, 'Rope', 'Useful for climbing or tying', 'Stored with other travel and climbing gear', 'Could be useful for climbing or tying things down', 'Tool', 'Common', 1, NULL),
+(11, 5, 'Herbal Remedy Kit', 'Basic kit used to treat wounds and poison', 'Can stabilize characters without magic', 'Useful for travel and emergencies', 'Tool', 'Common', 1, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Users`
+--
+
+CREATE TABLE `Users` (
+  `username` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `password` varchar(50) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `Users`
+--
+
+INSERT INTO `Users` (`username`, `password`) VALUES
+('George', 'password456'),
+('GM Individual', 'password000'),
+('Henry', 'password789'),
+('No Friends Larry', 'password000'),
+('Steve', 'password123');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `Characters`
+--
+ALTER TABLE `Characters`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `isAt` (`isAt`);
+
+--
+-- Indexes for table `Contains`
+--
+ALTER TABLE `Contains`
+  ADD PRIMARY KEY (`containee`),
+  ADD KEY `container` (`container`);
+
+--
+-- Indexes for table `Creatures`
+--
+ALTER TABLE `Creatures`
+  ADD PRIMARY KEY (`ID`);
+
+--
+-- Indexes for table `Locations`
+--
+ALTER TABLE `Locations`
+  ADD PRIMARY KEY (`ID`);
+
+--
+-- Indexes for table `NPCs`
+--
+ALTER TABLE `NPCs`
+  ADD PRIMARY KEY (`ID`);
+
+--
+-- Indexes for table `Players`
+--
+ALTER TABLE `Players`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `playedBy` (`playedBy`);
+
+--
+-- Indexes for table `PlayingIn`
+--
+ALTER TABLE `PlayingIn`
+  ADD KEY `user` (`user`),
+  ADD KEY `plays` (`plays`),
+  ADD KEY `inWorld` (`world`);
+
+--
+-- Indexes for table `Props`
+--
+ALTER TABLE `Props`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `isIn` (`isIn`),
+  ADD KEY `ownedBy` (`owner`);
+
+--
+-- Indexes for table `Users`
+--
+ALTER TABLE `Users`
+  ADD PRIMARY KEY (`username`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `Characters`
+--
+ALTER TABLE `Characters`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT for table `Locations`
+--
+ALTER TABLE `Locations`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `Props`
+--
+ALTER TABLE `Props`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 -- --------------------------------------------------------
 
 --
 -- Structure for view `player_NPC_view`
 --
+DROP TABLE IF EXISTS `player_NPC_view`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`jacobaleixo`@`localhost` SQL SECURITY DEFINER VIEW `player_NPC_view`  AS SELECT `c`.`name` AS `Name`, `c`.`race` AS `Race`, `c`.`description` AS `Description`, `c`.`partyNotes` AS `Notes`, `l`.`name` AS `Location` FROM (`Characters` `c` left join `Locations` `l` on((`c`.`isAt` = `l`.`ID`))) ;
 COMMIT;
