@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Mar 27, 2026 at 02:49 PM
+-- Generation Time: Mar 30, 2026 at 11:27 AM
 -- Server version: 5.7.44-48
 -- PHP Version: 8.3.26
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `loganmcc_scribe`
+-- Database: `jacobale_scribe`
 --
 
 -- --------------------------------------------------------
@@ -48,11 +48,14 @@ INSERT INTO `Characters` (`ID`, `isAt`, `name`, `race`, `description`, `gmNotes`
 (4, 2, 'Horacio Garzon', 'human', 'wine artisan', 'Passion for grapes', 'Played by George'),
 (5, 2, 'Jovi', 'Ka’Tavin', 'Animal sold in Siwanilua', 'Will be used to train ‘Ride’ skill', 'Bought by Wilhelm'),
 (6, 4, 'Olver Thumbless', 'human', 'Recruit who has no thumbs', 'Dies in Hranic Raid', 'His name is now ‘Nubs’'),
-(7, 5, 'Xiarkydoth', 'spider', 'Spider in Myrantahl Forests', 'Beast Aliyra encounters?', ''),
+(7, 5, 'Xiarkydoth', 'spider', 'Spider in Myrantahl Forests', 'Beast Aliyra encounters?', 'Hostile forest creature, dangerous but avoidable'),
 (8, 2, 'Leon Septar', 'human', 'Bouncer, detective', 'Passion for sneaking', 'Played by Henry'),
-(9, 5, 'Aliyra Maastehr', 'ghord', 'Apothecary from Ghordeiol', 'Wife to Ephram and Mother to Obram and Ilen', ''),
+(9, 5, 'Aliyra Maastehr', 'ghord', 'Apothecary from Ghordeiol', 'Wife to Ephram and Mother to Obram and Ilen', 'Helpful apothecary, potential ally for potions and healing'),
 (10, 4, 'Chef Mya', 'human', 'Chef at Fort Hranic', 'Head chef', 'Falls in love with Wilhelm'),
-(11, 2, 'Katka', 'Wajin', 'A cat like creatures with ivory tusks and four eyes', 'Hitsens Wajin', 'Cool cat that we must obtain');
+(11, 2, 'Katka', 'Wajin', 'A cat like creatures with ivory tusks and four eyes', 'Hitsens Wajin', 'Cool cat that we must obtain'),
+(13, 2, 'Bram Ironfist', 'dwarf', 'Blacksmith in Fort Hranic', 'Provides weapons to guards', 'Gruff but reliable'),
+(14, 3, 'Lysa Windmere', 'human', 'Traveling merchant', 'Knows trade routes', 'Often visits taverns'),
+(15, 5, 'Torren Vale', 'elf', 'Forest scout', 'Watches for threats in Myrantahl Forest', 'Quiet and observant');
 
 -- --------------------------------------------------------
 
@@ -96,7 +99,10 @@ CREATE TABLE `Creatures` (
 INSERT INTO `Creatures` (`ID`, `population`, `ability`) VALUES
 (5, 1, 'Pincer Tail Attack'),
 (7, 1, 'Sticky Web Grab'),
-(11, 1000, 'Jumping Claw Grab');
+(11, 1000, 'Jumping Claw Grab'),
+(15, 30, 'Bite Attack'),
+(16, 10, 'Venom Strike'),
+(17, 60, 'Camouflage');
 
 -- --------------------------------------------------------
 
@@ -147,7 +153,9 @@ INSERT INTO `NPCs` (`ID`, `opinions`, `occupation`) VALUES
 (3, 'Friendly facade, secretly plotting destruction', 'Alchemist in Training'),
 (6, 'Eager to prove himself despite disability', 'Chef in Training'),
 (9, 'Caring and knowledgeable, misses her family', 'Apothecary'),
-(10, 'Warm and welcoming, develops feelings for Wilhelm', 'Chef');
+(10, 'Warm and welcoming, develops feelings for Wilhelm', 'Chef'),
+(11, 'Strict but fair leader of the guards', 'Guard Captain'),
+(12, 'Kind healer who helps the poor', 'Healer');
 
 -- --------------------------------------------------------
 
@@ -174,16 +182,16 @@ INSERT INTO `Players` (`ID`, `level`, `playedBy`, `combat_style`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `player_NPC_view`
+-- Stand-in structure for view `player_NPC_view`
+-- (See below for the actual view)
 --
-
 CREATE TABLE `player_NPC_view` (
-  `Name` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `Race` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `Description` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `Notes` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `Location` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+`Name` varchar(50)
+,`Race` varchar(50)
+,`Description` varchar(1000)
+,`Notes` varchar(1000)
+,`Location` varchar(50)
+);
 
 -- --------------------------------------------------------
 
@@ -237,7 +245,13 @@ INSERT INTO `Props` (`ID`, `isIn`, `name`, `description`, `gmNotes`, `partyNotes
 (2, 4, 'Alchemy Kit', 'A set of tools for brewing potions', 'Belongs to Renly', 'Confiscated after the raid', 'Tool', 'Common', 1, 3),
 (3, 2, 'Grape Wine', 'A fine bottle of Siwaniluan wine', 'Horacio made this himself', 'Worth good money', 'Consumable', 'Common', 5, 4),
 (4, 4, 'Fort Manifest', 'A list of all recruits at Hranic Fort', 'Contains evidence against Stephahk', 'We need to get this', 'Document', 'Rare', 1, 2),
-(5, 1, 'Desert Cloak', 'A cloak that blends into sand', 'Useful for desert travel', 'Bought in Kua Loranta', 'Armor', 'Common', 1, 8);
+(5, 1, 'Desert Cloak', 'A cloak that blends into sand', 'Useful for desert travel', 'Bought in Kua Loranta', 'Armor', 'Common', 1, 8),
+(6, 4, 'Iron Sword', 'Standard weapon used by guards', 'Standard issue weapon kept in the fort armory', 'Useful if we need extra weapons', 'Weapon', 'Common', 1, 1),
+(7, 4, 'Healing Potion', 'Restores minor injuries', 'Stored by the fort medic', 'Can help after a fight', 'Consumable', 'Common', 1, 8),
+(8, 2, 'Travel Cloak', 'Protects against weather', 'Common travel gear sold by merchants', 'Good for long trips', 'Armor', 'Common', 1, NULL),
+(9, 4, 'Lantern', 'Provides light in dark areas', 'Used by guards and scouts at night', 'Helps light dark areas', 'Tool', 'Common', 2, NULL),
+(10, 4, 'Rope', 'Useful for climbing or tying', 'Stored with other travel and climbing gear', 'Could be useful for climbing or tying things down', 'Tool', 'Common', 1, NULL),
+(11, 5, 'Herbal Remedy Kit', 'Basic kit used to treat wounds and poison', 'Can stabilize characters without magic', 'Useful for travel and emergencies', 'Tool', 'Common', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -334,7 +348,7 @@ ALTER TABLE `Users`
 -- AUTO_INCREMENT for table `Characters`
 --
 ALTER TABLE `Characters`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `Locations`
@@ -346,7 +360,16 @@ ALTER TABLE `Locations`
 -- AUTO_INCREMENT for table `Props`
 --
 ALTER TABLE `Props`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `player_NPC_view`
+--
+DROP TABLE IF EXISTS `player_NPC_view`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`jacobaleixo`@`localhost` SQL SECURITY DEFINER VIEW `player_NPC_view`  AS SELECT `c`.`name` AS `Name`, `c`.`race` AS `Race`, `c`.`description` AS `Description`, `c`.`partyNotes` AS `Notes`, `l`.`name` AS `Location` FROM (`Characters` `c` left join `Locations` `l` on((`c`.`isAt` = `l`.`ID`))) ;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
