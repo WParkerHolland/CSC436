@@ -55,7 +55,9 @@ INSERT INTO `Characters` (`ID`, `isAt`, `name`, `race`, `description`, `gmNotes`
 (11, 2, 'Katka', 'Wajin', 'A cat like creatures with ivory tusks and four eyes', 'Hitsens Wajin', 'Cool cat that we must obtain'),
 (13, 2, 'Bram Ironfist', 'dwarf', 'Blacksmith in Fort Hranic', 'Provides weapons to guards', 'Gruff but reliable'),
 (14, 3, 'Lysa Windmere', 'human', 'Traveling merchant', 'Knows trade routes', 'Often visits taverns'),
-(15, 5, 'Torren Vale', 'elf', 'Forest scout', 'Watches for threats in Myrantahl Forest', 'Quiet and observant');
+(15, 5, 'Torren Vale', 'elf', 'Forest scout', 'Watches for threats in Myrantahl Forest', 'Quiet and observant'),
+(16, 9, 'Velcifer', 'Herdazian', 'Agent/Hunter', 'Serial Looter', 'Has not spoken an oath, mysterious backstory about Herdazian navy'),
+(17, 9, 'Ylt', 'Iriali', 'Tall man with golden skin', 'wields a stolen honor blade', 'Killed Brad Pitt');
 
 -- --------------------------------------------------------
 
@@ -130,7 +132,8 @@ INSERT INTO `Locations` (`ID`, `name`, `description`, `gmNotes`, `partyNotes`) V
 (5, 'Ghordeiol', 'Northern country also soft controlled by Hrace', 'Potential site for future campaigns', ''),
 (6, 'The World', 'This is the big world that contains everything', 'The good and evil happens here', ''),
 (7, 'Barracks', 'Barracks in a fort, weapons and stuff', '', ''),
-(8, 'Completely Unrelated World', 'This world doesn\'t have anything yet', '', '');
+(8, 'Completely Unrelated World', 'This world doesn''t have anything yet', '', ''),
+(9, 'Roshar', 'World where Stormlight Archives takes place' , 'World for Stormlight tabletop RPG', 'Populations range from different kinds of Humans to crab people called Parshendi');
 
 -- --------------------------------------------------------
 
