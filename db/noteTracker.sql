@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Mar 30, 2026 at 11:27 AM
+-- Generation Time: Mar 31, 2026 at 10:28 PM
 -- Server version: 5.7.44-48
 -- PHP Version: 8.3.26
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `jacobale_scribe`
+-- Database: `parkerho_noteTracker`
 --
 
 -- --------------------------------------------------------
@@ -55,7 +55,9 @@ INSERT INTO `Characters` (`ID`, `isAt`, `name`, `race`, `description`, `gmNotes`
 (11, 2, 'Katka', 'Wajin', 'A cat like creatures with ivory tusks and four eyes', 'Hitsens Wajin', 'Cool cat that we must obtain'),
 (13, 2, 'Bram Ironfist', 'dwarf', 'Blacksmith in Fort Hranic', 'Provides weapons to guards', 'Gruff but reliable'),
 (14, 3, 'Lysa Windmere', 'human', 'Traveling merchant', 'Knows trade routes', 'Often visits taverns'),
-(15, 5, 'Torren Vale', 'elf', 'Forest scout', 'Watches for threats in Myrantahl Forest', 'Quiet and observant');
+(15, 5, 'Torren Vale', 'elf', 'Forest scout', 'Watches for threats in Myrantahl Forest', 'Quiet and observant'),
+(16, 2, 'Johny Long-Legged', 'human', 'A humble human with muscly legs contributing to 90% of his height', 'Orphan of a giant and halfling', 'Silly guy');
+
 
 -- --------------------------------------------------------
 
@@ -251,7 +253,14 @@ INSERT INTO `Props` (`ID`, `isIn`, `name`, `description`, `gmNotes`, `partyNotes
 (8, 2, 'Travel Cloak', 'Protects against weather', 'Common travel gear sold by merchants', 'Good for long trips', 'Armor', 'Common', 1, NULL),
 (9, 4, 'Lantern', 'Provides light in dark areas', 'Used by guards and scouts at night', 'Helps light dark areas', 'Tool', 'Common', 2, NULL),
 (10, 4, 'Rope', 'Useful for climbing or tying', 'Stored with other travel and climbing gear', 'Could be useful for climbing or tying things down', 'Tool', 'Common', 1, NULL),
-(11, 5, 'Herbal Remedy Kit', 'Basic kit used to treat wounds and poison', 'Can stabilize characters without magic', 'Useful for travel and emergencies', 'Tool', 'Common', 1, NULL);
+(11, 5, 'Herbal Remedy Kit', 'Basic kit used to treat wounds and poison', 'Can stabilize characters without magic', 'Useful for travel and emergencies', 'Tool', 'Common', 1, NULL),
+(12, 1, 'Rock', 'Just a normal rock', 'Has a evil demon inside', '', 'Miscellaneous', 'Common', 1, 8),
+(13, 1, 'Grass', 'A single blade of grass', '', '', 'Miscellaneous', 'Common', 75, 8),
+(14, 1, 'Stale Sandwich', 'It doesn\'t taste great but it still edible', 'Spoiled and poisonous', 'May be spoiled', 'Consumable', 'Common', 3, 8),
+(15, 1, 'Bucket Hat', 'Protects from the sun', '', 'Same color as desert cloak', 'Armor', 'Uncommon', 1, 8),
+(16, 1, 'Rope', '1 foot of hempen rope', '', '', 'Tool', 'Common', 50, 8),
+(17, 1, 'Ancient Sword', 'There is myth of an ancient sword somewhere lost in this nation', 'Buried under a tree', '', 'Weapon', 'Rare', 1, NULL),
+(18, 1, 'Glasswork', 'Glassblowing is a prized art here, so it can be quite valuable when done well.', '', '', 'Miscellaneous', 'Uncommon', 4, NULL);
 
 -- --------------------------------------------------------
 
@@ -348,7 +357,7 @@ ALTER TABLE `Users`
 -- AUTO_INCREMENT for table `Characters`
 --
 ALTER TABLE `Characters`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `Locations`
@@ -360,7 +369,16 @@ ALTER TABLE `Locations`
 -- AUTO_INCREMENT for table `Props`
 --
 ALTER TABLE `Props`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `dm_inventory_view`
+--
+DROP TABLE IF EXISTS `dm_inventory_view`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`parkerholland04`@`localhost` SQL SECURITY DEFINER VIEW `dm_inventory_view`  AS SELECT `Characters`.`name` AS `OwnerName`, `Props`.`name` AS `ItemName`, `Props`.`itemType` AS `ItemType`, `Props`.`description` AS `ItemDescription`, `Props`.`gmNotes` AS `ItemNotes`, `Props`.`quantity` AS `QuantityOwned` FROM (`Characters` join `Props`) WHERE (`Props`.`owner` = `Characters`.`ID`) ORDER BY `Characters`.`name` ASC ;
 
 -- --------------------------------------------------------
 
@@ -369,7 +387,57 @@ ALTER TABLE `Props`
 --
 DROP TABLE IF EXISTS `player_NPC_view`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`jacobaleixo`@`localhost` SQL SECURITY DEFINER VIEW `player_NPC_view`  AS SELECT `c`.`name` AS `Name`, `c`.`race` AS `Race`, `c`.`description` AS `Description`, `c`.`partyNotes` AS `Notes`, `l`.`name` AS `Location` FROM (`Characters` `c` left join `Locations` `l` on((`c`.`isAt` = `l`.`ID`))) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`parkerholland04`@`localhost` SQL SECURITY DEFINER VIEW `player_NPC_view`  AS SELECT `Characters`.`name` AS `Name`, `Characters`.`race` AS `Race`, `Characters`.`description` AS `Description`, `Characters`.`partyNotes` AS `Notes`, `Locations`.`name` AS `Location` FROM (`Characters` join `Locations`) WHERE ((`Characters`.`isAt` = `Locations`.`ID`) AND (not(`Characters`.`ID` in (select `Players`.`ID` from `Players`)))) ORDER BY `Locations`.`name` ASC ;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `Characters`
+--
+ALTER TABLE `Characters`
+  ADD CONSTRAINT `isAt` FOREIGN KEY (`isAt`) REFERENCES `Locations` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `Contains`
+--
+ALTER TABLE `Contains`
+  ADD CONSTRAINT `containee` FOREIGN KEY (`containee`) REFERENCES `Locations` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `container` FOREIGN KEY (`container`) REFERENCES `Locations` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `Creatures`
+--
+ALTER TABLE `Creatures`
+  ADD CONSTRAINT `isCreature` FOREIGN KEY (`ID`) REFERENCES `Characters` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `NPCs`
+--
+ALTER TABLE `NPCs`
+  ADD CONSTRAINT `isNPC` FOREIGN KEY (`ID`) REFERENCES `Characters` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `Players`
+--
+ALTER TABLE `Players`
+  ADD CONSTRAINT `isPlayer` FOREIGN KEY (`ID`) REFERENCES `Characters` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `playedBy` FOREIGN KEY (`playedBy`) REFERENCES `Users` (`username`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `PlayingIn`
+--
+ALTER TABLE `PlayingIn`
+  ADD CONSTRAINT `inWorld` FOREIGN KEY (`world`) REFERENCES `Locations` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `user` FOREIGN KEY (`user`) REFERENCES `Users` (`username`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `Props`
+--
+ALTER TABLE `Props`
+  ADD CONSTRAINT `isIn` FOREIGN KEY (`isIn`) REFERENCES `Locations` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `ownedBy` FOREIGN KEY (`owner`) REFERENCES `Characters` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
