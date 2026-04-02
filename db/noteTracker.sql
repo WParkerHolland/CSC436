@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Mar 31, 2026 at 10:28 PM
+-- Generation Time: Apr 01, 2026 at 09:07 PM
 -- Server version: 5.7.44-48
 -- PHP Version: 8.3.26
 
@@ -56,8 +56,7 @@ INSERT INTO `Characters` (`ID`, `isAt`, `name`, `race`, `description`, `gmNotes`
 (13, 2, 'Bram Ironfist', 'dwarf', 'Blacksmith in Fort Hranic', 'Provides weapons to guards', 'Gruff but reliable'),
 (14, 3, 'Lysa Windmere', 'human', 'Traveling merchant', 'Knows trade routes', 'Often visits taverns'),
 (15, 5, 'Torren Vale', 'elf', 'Forest scout', 'Watches for threats in Myrantahl Forest', 'Quiet and observant'),
-(16, 2, 'Johny Long-Legged', 'human', 'A humble human with muscly legs contributing to 90% of his height', 'Orphan of a giant and halfling', 'Silly guy');
-
+(18, 2, 'Johny Long-Legged', 'human', 'A humble human with muscly legs contributing to 90% of his height', 'Orphan of a giant and halfling', 'Silly guy');
 
 -- --------------------------------------------------------
 
@@ -109,6 +108,21 @@ INSERT INTO `Creatures` (`ID`, `population`, `ability`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Stand-in structure for view `dm_inventory_view`
+-- (See below for the actual view)
+--
+CREATE TABLE `dm_inventory_view` (
+`OwnerName` varchar(50)
+,`ItemName` varchar(50)
+,`ItemType` varchar(50)
+,`ItemDescription` varchar(1000)
+,`ItemNotes` varchar(1000)
+,`QuantityOwned` int(11)
+);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `Locations`
 --
 
@@ -143,21 +157,22 @@ INSERT INTO `Locations` (`ID`, `name`, `description`, `gmNotes`, `partyNotes`) V
 CREATE TABLE `NPCs` (
   `ID` int(11) NOT NULL,
   `opinions` varchar(1000) COLLATE utf8_unicode_ci NOT NULL,
-  `occupation` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT ''
+  `occupation` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `gold` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `NPCs`
 --
 
-INSERT INTO `NPCs` (`ID`, `opinions`, `occupation`) VALUES
-(2, 'Cooperative with Hrace, indifferent to recruits', 'Military Recruit Commander'),
-(3, 'Friendly facade, secretly plotting destruction', 'Alchemist in Training'),
-(6, 'Eager to prove himself despite disability', 'Chef in Training'),
-(9, 'Caring and knowledgeable, misses her family', 'Apothecary'),
-(10, 'Warm and welcoming, develops feelings for Wilhelm', 'Chef'),
-(11, 'Strict but fair leader of the guards', 'Guard Captain'),
-(12, 'Kind healer who helps the poor', 'Healer');
+INSERT INTO `NPCs` (`ID`, `opinions`, `occupation`, `gold`) VALUES
+(2, 'Cooperative with Hrace, indifferent to recruits', 'Military Recruit Commander', 0),
+(3, 'Friendly facade, secretly plotting destruction', 'Alchemist in Training', 0),
+(6, 'Eager to prove himself despite disability', 'Chef in Training', 0),
+(9, 'Caring and knowledgeable, misses her family', 'Apothecary', 0),
+(10, 'Warm and welcoming, develops feelings for Wilhelm', 'Chef', 50),
+(11, 'Strict but fair leader of the guards', 'Guard Captain', 0),
+(12, 'Kind healer who helps the poor', 'Healer', 0);
 
 -- --------------------------------------------------------
 
@@ -369,7 +384,7 @@ ALTER TABLE `Locations`
 -- AUTO_INCREMENT for table `Props`
 --
 ALTER TABLE `Props`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 -- --------------------------------------------------------
 
@@ -410,19 +425,19 @@ ALTER TABLE `Contains`
 -- Constraints for table `Creatures`
 --
 ALTER TABLE `Creatures`
-  ADD CONSTRAINT `isCreature` FOREIGN KEY (`ID`) REFERENCES `Characters` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `isCreature` FOREIGN KEY (`ID`) REFERENCES `Characters` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `NPCs`
 --
 ALTER TABLE `NPCs`
-  ADD CONSTRAINT `isNPC` FOREIGN KEY (`ID`) REFERENCES `Characters` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `isNPC` FOREIGN KEY (`ID`) REFERENCES `Characters` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `Players`
 --
 ALTER TABLE `Players`
-  ADD CONSTRAINT `isPlayer` FOREIGN KEY (`ID`) REFERENCES `Characters` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `isPlayer` FOREIGN KEY (`ID`) REFERENCES `Characters` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `playedBy` FOREIGN KEY (`playedBy`) REFERENCES `Users` (`username`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
