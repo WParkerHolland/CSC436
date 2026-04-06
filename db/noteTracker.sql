@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Apr 01, 2026 at 09:07 PM
+-- Generation Time: Apr 05, 2026 at 07:27 PM
 -- Server version: 5.7.44-48
 -- PHP Version: 8.3.26
 
@@ -302,6 +302,25 @@ INSERT INTO `Users` (`username`, `password`) VALUES
 ('No Friends Larry', 'password000'),
 ('Steve', 'password123');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `WorldSecurity`
+--
+
+CREATE TABLE `WorldSecurity` (
+  `worldID` int(11) NOT NULL,
+  `securityMeasure` enum('plain','hash') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'plain'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `WorldSecurity`
+--
+
+INSERT INTO `WorldSecurity` (`worldID`, `securityMeasure`) VALUES
+(6, 'plain'),
+(8, 'hash');
+
 --
 -- Indexes for dumped tables
 --
@@ -368,6 +387,12 @@ ALTER TABLE `Users`
   ADD PRIMARY KEY (`username`);
 
 --
+-- Indexes for table `WorldSecurity`
+--
+ALTER TABLE `WorldSecurity`
+  ADD PRIMARY KEY (`worldID`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -375,7 +400,7 @@ ALTER TABLE `Users`
 -- AUTO_INCREMENT for table `Characters`
 --
 ALTER TABLE `Characters`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `Locations`
@@ -425,37 +450,10 @@ ALTER TABLE `Contains`
   ADD CONSTRAINT `container` FOREIGN KEY (`container`) REFERENCES `Locations` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Constraints for table `Creatures`
+-- Constraints for table `WorldSecurity`
 --
-ALTER TABLE `Creatures`
-  ADD CONSTRAINT `isCreature` FOREIGN KEY (`ID`) REFERENCES `Characters` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `NPCs`
---
-ALTER TABLE `NPCs`
-  ADD CONSTRAINT `isNPC` FOREIGN KEY (`ID`) REFERENCES `Characters` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `Players`
---
-ALTER TABLE `Players`
-  ADD CONSTRAINT `isPlayer` FOREIGN KEY (`ID`) REFERENCES `Characters` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `playedBy` FOREIGN KEY (`playedBy`) REFERENCES `Users` (`username`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `PlayingIn`
---
-ALTER TABLE `PlayingIn`
-  ADD CONSTRAINT `inWorld` FOREIGN KEY (`world`) REFERENCES `Locations` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `user` FOREIGN KEY (`user`) REFERENCES `Users` (`username`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `Props`
---
-ALTER TABLE `Props`
-  ADD CONSTRAINT `isIn` FOREIGN KEY (`isIn`) REFERENCES `Locations` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `ownedBy` FOREIGN KEY (`owner`) REFERENCES `Characters` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `WorldSecurity`
+  ADD CONSTRAINT `isWorld` FOREIGN KEY (`worldID`) REFERENCES `PlayingIn` (`world`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
