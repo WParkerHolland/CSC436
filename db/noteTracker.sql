@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Apr 01, 2026 at 09:07 PM
+-- Generation Time: Apr 05, 2026 at 07:43 PM
 -- Server version: 5.7.44-48
 -- PHP Version: 8.3.26
 
@@ -53,6 +53,7 @@ INSERT INTO `Characters` (`ID`, `isAt`, `name`, `race`, `description`, `gmNotes`
 (9, 5, 'Aliyra Maastehr', 'ghord', 'Apothecary from Ghordeiol', 'Wife to Ephram and Mother to Obram and Ilen', 'Helpful apothecary, potential ally for potions and healing'),
 (10, 4, 'Chef Mya', 'human', 'Chef at Fort Hranic', 'Head chef', 'Falls in love with Wilhelm'),
 (11, 2, 'Katka', 'Wajin', 'A cat like creatures with ivory tusks and four eyes', 'Hitsens Wajin', 'Cool cat that we must obtain'),
+(12, 2, 'Healer Mam', 'elf', 'Decorated in trinkets and baubles', 'All poisons', 'Healer'),
 (13, 2, 'Bram Ironfist', 'dwarf', 'Blacksmith in Fort Hranic', 'Provides weapons to guards', 'Gruff but reliable'),
 (14, 3, 'Lysa Windmere', 'human', 'Traveling merchant', 'Knows trade routes', 'Often visits taverns'),
 (15, 5, 'Torren Vale', 'elf', 'Forest scout', 'Watches for threats in Myrantahl Forest', 'Quiet and observant'),
@@ -148,8 +149,8 @@ INSERT INTO `Locations` (`ID`, `name`, `description`, `gmNotes`, `partyNotes`) V
 (5, 'Ghordeiol', 'Northern country also soft controlled by Hrace', 'Potential site for future campaigns', ''),
 (6, 'The World', 'This is the big world that contains everything', 'The good and evil happens here', ''),
 (7, 'Barracks', 'Barracks in a fort, weapons and stuff', '', ''),
-(8, 'Completely Unrelated World', 'This world doesn''t have anything yet', '', ''),
-(9, 'Roshar', 'World where Stormlight Archives takes place' , 'World for Stormlight tabletop RPG', 'Populations range from different kinds of Humans to crab people called Parshendi');
+(8, 'Completely Unrelated World', 'This world doesn\'t have anything yet', '', ''),
+(9, 'Roshar', 'World where Stormlight Archives takes place', 'World for Stormlight tabletop RPG', 'Populations range from different kinds of Humans to crab people called Parshendi');
 
 -- --------------------------------------------------------
 
@@ -302,6 +303,25 @@ INSERT INTO `Users` (`username`, `password`) VALUES
 ('No Friends Larry', 'password000'),
 ('Steve', 'password123');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `WorldSecurity`
+--
+
+CREATE TABLE `WorldSecurity` (
+  `worldID` int(11) NOT NULL,
+  `securityMeasure` enum('plain','hash') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'plain'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `WorldSecurity`
+--
+
+INSERT INTO `WorldSecurity` (`worldID`, `securityMeasure`) VALUES
+(6, 'plain'),
+(8, 'hash');
+
 --
 -- Indexes for dumped tables
 --
@@ -368,6 +388,12 @@ ALTER TABLE `Users`
   ADD PRIMARY KEY (`username`);
 
 --
+-- Indexes for table `WorldSecurity`
+--
+ALTER TABLE `WorldSecurity`
+  ADD PRIMARY KEY (`worldID`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -375,13 +401,13 @@ ALTER TABLE `Users`
 -- AUTO_INCREMENT for table `Characters`
 --
 ALTER TABLE `Characters`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `Locations`
 --
 ALTER TABLE `Locations`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `Props`
@@ -456,6 +482,12 @@ ALTER TABLE `PlayingIn`
 ALTER TABLE `Props`
   ADD CONSTRAINT `isIn` FOREIGN KEY (`isIn`) REFERENCES `Locations` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `ownedBy` FOREIGN KEY (`owner`) REFERENCES `Characters` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `WorldSecurity`
+--
+ALTER TABLE `WorldSecurity`
+  ADD CONSTRAINT `isWorld` FOREIGN KEY (`worldID`) REFERENCES `PlayingIn` (`world`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
