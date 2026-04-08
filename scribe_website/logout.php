@@ -7,5 +7,5 @@
 
 
 	logout();											// Call the logout function to terminate session
-	header('Location: index.php');						// Redirect to index page
+	header('Location: login.php');						// Redirect to login page
 ?>

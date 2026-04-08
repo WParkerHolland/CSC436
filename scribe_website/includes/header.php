@@ -20,7 +20,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toys R URI</title>
+    <title>Scribe</title>
 
     <link rel="stylesheet" href="css/styles.css">
 
@@ -36,22 +36,15 @@
     <div class="container header-container">
 
         <div class="logo">
-            <img src="imgs/logo.png" alt="Toys R URI logo">
+            <img src="imgs/logo.png" alt="No Existing Scribe Logo">
         </div>
 
         <nav class="main-nav">
             <ul>
-                <li><a href="index.php">Toy Catalog</a></li>
-
-                <!-- TO-DO: Update this link to show "Log In" or "Log Out" depending on whether the user is logged in
-                            Hint: Check session.php for a flag variable tracking login status
-                                  Consider using the null-coalescing operator
-                -->
                 <?php if($logged_in) { ?>
+                    <li><a href="dashboard.php">User Dashboard</a></li>
                     <li><a href="logout.php">Log Out</a></li> 
-                <?php } else { ?>
-                    <li><a href="login.php">Log In</a></li> 
-                <?php } ?> 
+                <?php } ?>
                  
             </ul>
         </nav>
