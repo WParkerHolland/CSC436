@@ -1,0 +1,367 @@
+/* =========================
+   GLOBAL STYLES
+========================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Lilita One", sans-serif;
+  background-color: #ffffff;
+}
+
+/* Content container */
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.site-header {
+  background-color: #6191be;
+  padding: 15px 0;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo img {
+  width: 110px;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+.main-nav ul {
+  display: flex;
+  list-style: none;
+  gap: 25px;
+}
+
+.main-nav a {
+  text-decoration: none;
+  color: white;
+}
+
+.main-nav a:hover {
+  color: #183052;
+}
+
+
+/* =========================
+   TOY CATALOG
+========================= */
+
+.toy-catalog {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+  margin-top: 30px;
+}
+
+
+/* =========================
+   TOY CARD
+========================= */
+
+.toy-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  text-align: center;
+  background: white;
+  transition: transform 0.2s ease;
+}
+
+.toy-card:hover {
+  transform: translateY(-6px);
+}
+
+.toy-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.toy-card h2 {
+  margin-top: 15px;
+  color: #6191be;
+}
+
+.toy-card p {
+  font-family: sans-serif;
+  color: #555;
+  margin-top: 5px;
+}
+
+
+/* =========================
+   TOY DETAILS PAGE
+========================= */
+
+.toy-details-container {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+.toy-image {
+  flex: 1;
+}
+
+.toy-image img {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+}
+
+.toy-details {
+  flex: 2;
+}
+
+.toy-details-page {
+  margin-top: 30px;
+}
+
+.toy-details h1 {
+  color: #6191be;
+  margin-bottom: 10px;
+}
+
+.toy-details h3 {
+  margin-top: 25px;
+}
+
+.toy-details p {
+  margin-bottom: 10px;
+  font-family: sans-serif;
+  color: #555;
+}
+
+
+/* =========================
+   LOGIN PAGE
+========================= */
+
+.login-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.login-container h1 {
+    text-align: center;
+    color: #6191be;
+    margin-bottom: 20px;
+}
+
+.login-form .form-group {
+    margin-bottom: 15px;
+}
+
+.login-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.login-form .submit-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #6191be;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.login-form .submit-btn:hover {
+    background-color: #497a9e;
+}
+
+.animate-bottom {
+    position: relative;
+    animation: animatebottom 0.5s;
+}
+
+@keyframes animatebottom {
+    from { bottom: -50px; opacity: 0 }
+    to { bottom: 0; opacity: 1 }
+}
+
+
+/* =========================
+   PROFILE PAGE
+========================= */
+
+.profile-page h1 {
+    text-align: center;
+    color: #6191be;
+    margin-bottom: 20px;
+}
+
+.orders-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.order-card {
+  flex: 0 0 calc(50% - 20px);
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  transition: transform 0.3s ease;
+}
+
+.order-card:hover {
+    transform: scale(1.05);
+}
+
+.order-card img {
+    width: 100%;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.order-info p {
+    margin: 5px 0;
+    font-family: sans-serif;
+    color: #555;
+}
+
+.order-info strong {
+    margin: 5px 0;
+    color: #6191be;
+}
+
+.no-orders {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 1.2rem;
+    color: #555;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.site-footer {
+  margin-top: 50px;
+  padding: 20px 0;
+  background-color: #6191be;
+  text-align: center;
+}
+
+.site-footer p {
+  color: white;
+}
+
+
+/* =========================
+   RESPONSIVE DESIGN
+========================= */
+
+/* Tablet */
+
+@media (max-width: 1000px) {
+
+  .toy-catalog {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+}
+
+
+/* Small tablet */
+
+@media (max-width: 750px) {
+
+  .toy-catalog {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .toy-details-container {
+    flex-direction: column;
+  }
+
+  .toy-card img {
+    height: auto;
+    max-height: 250px;
+    object-fit: contain;
+  }
+
+}
+
+
+/* Mobile */
+
+@media (max-width: 500px) {
+
+  .header-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .main-nav ul {
+    gap: 15px;
+  }
+
+  .toy-catalog {
+    grid-template-columns: 1fr;
+  }
+
+  .toy-card img {
+    height: auto;
+    max-height: 200px;
+    object-fit: contain;
+  }
+
+  .login-container {
+        padding: 20px;
+        margin: 20px;
+  }
+
+  .orders-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .order-card {
+        width: 90%;
+    }
+
+}
