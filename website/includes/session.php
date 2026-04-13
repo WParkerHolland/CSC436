@@ -50,9 +50,15 @@ use const Dom\STRING_SIZE_ERR;
           4. Returns the matching user row if found
 	*/
 	function authenticate(PDO $pdo, string $username, string $password) {
-		$sql = "SELECT *
-				FROM customer
-				WHERE username= :uName and password= :uPass;";
-				
-		return pdo($pdo, $sql, ["uName" => $username, "uPass"=> $password])->fetch();
-	}
+
+    // Get user by username
+    $sql = "SELECT * FROM customer WHERE username = :uName;";
+    $user = pdo($pdo, $sql, ["uName" => $username])->fetch();
+
+    // Verify encrytped password
+    if ($user && password_verify($password, $user['password'])) {
+        return $user;
+    }
+
+    return false;
+}
