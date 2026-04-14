@@ -11,7 +11,7 @@ use const Dom\STRING_SIZE_ERR;
 	{
 	    $_SESSION['logged_in'] = true;						// Set logged_in key to true
 	    $_SESSION['username'] = $user['username'];			// Set username key to username from database 
-		$_SESSION['custID']   = $user['custID'];			// Set custID key to custID from database 
+		//$_SESSION['custID']   = $user['custID'];			// Set custID key to custID from database 
 
 		session_regenerate_id(true); 						// Update session id
 	}
@@ -51,7 +51,7 @@ use const Dom\STRING_SIZE_ERR;
 	*/
 	function authenticate(PDO $pdo, string $username, string $password) {
 		$sql = "SELECT *
-				FROM customer
+				FROM Users
 				WHERE username= :uName and password= :uPass;";
 				
 		return pdo($pdo, $sql, ["uName" => $username, "uPass"=> $password])->fetch();

@@ -5,7 +5,7 @@
 
   
   if ($logged_in) {                                       // If already logged in  
-    header('Location: profile.php');                     // Redirect to profile page 
+    header('Location: dashboard.php');                     // Redirect to profile page 
     exit;                                               // Stop further code running
   }    
 
@@ -29,7 +29,7 @@
 
     if ($user) {                               // If user data returned
       login($user);                           // Call the login function to update session data
-      header('Location: profile.php');       // Redirect to profile page
+      header('Location: dashboard.php');       // Redirect to profile page
       exit;                                 // Stop further code running 
     }
   }
