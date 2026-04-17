@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Apr 05, 2026 at 07:43 PM
+-- Generation Time: Apr 17, 2026 at 12:05 PM
 -- Server version: 5.7.44-48
 -- PHP Version: 8.3.26
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `parkerho_noteTracker`
+-- Database: `loganmcc_scribe`
 --
 
 -- --------------------------------------------------------
@@ -34,32 +34,33 @@ CREATE TABLE `Characters` (
   `race` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `description` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `gmNotes` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `partyNotes` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT ''
+  `partyNotes` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `img_src` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `Characters`
 --
 
-INSERT INTO `Characters` (`ID`, `isAt`, `name`, `race`, `description`, `gmNotes`, `partyNotes`) VALUES
-(1, 2, 'Wilhelm Riquet', 'human', 'thief', 'Passion for animals', 'Played by Steve'),
-(2, 4, 'Commodore Stephahk', 'human', 'Recruitment officer at Fort Hranic', 'Rat who let attackers into fort', 'Weirdly chill guy'),
-(3, 4, 'Renly Gokel', 'human', 'Recruit specializing in alchemy', 'Harmless?', 'He is an evil terrorist'),
-(4, 2, 'Horacio Garzon', 'human', 'wine artisan', 'Passion for grapes', 'Played by George'),
-(5, 2, 'Jovi', 'Ka’Tavin', 'Animal sold in Siwanilua', 'Will be used to train ‘Ride’ skill', 'Bought by Wilhelm'),
-(6, 4, 'Olver Thumbless', 'human', 'Recruit who has no thumbs', 'Dies in Hranic Raid', 'His name is now ‘Nubs’'),
-(7, 5, 'Xiarkydoth', 'spider', 'Spider in Myrantahl Forests', 'Beast Aliyra encounters?', 'Hostile forest creature, dangerous but avoidable'),
-(8, 2, 'Leon Septar', 'human', 'Bouncer, detective', 'Passion for sneaking', 'Played by Henry'),
-(9, 5, 'Aliyra Maastehr', 'ghord', 'Apothecary from Ghordeiol', 'Wife to Ephram and Mother to Obram and Ilen', 'Helpful apothecary, potential ally for potions and healing'),
-(10, 4, 'Chef Mya', 'human', 'Chef at Fort Hranic', 'Head chef', 'Falls in love with Wilhelm'),
-(11, 2, 'Katka', 'Wajin', 'A cat like creatures with ivory tusks and four eyes', 'Hitsens Wajin', 'Cool cat that we must obtain'),
-(12, 2, 'Healer Mam', 'elf', 'Decorated in trinkets and baubles', 'All poisons', 'Healer'),
-(13, 2, 'Bram Ironfist', 'dwarf', 'Blacksmith in Fort Hranic', 'Provides weapons to guards', 'Gruff but reliable'),
-(14, 3, 'Lysa Windmere', 'human', 'Traveling merchant', 'Knows trade routes', 'Often visits taverns'),
-(15, 5, 'Torren Vale', 'elf', 'Forest scout', 'Watches for threats in Myrantahl Forest', 'Quiet and observant'),
-(16, 9, 'Velcifer', 'Herdazian', 'Agent/Hunter', 'Serial Looter', 'Has not spoken an oath, mysterious backstory about Herdazian navy'),
-(17, 9, 'Ylt', 'Iriali', 'Tall man with golden skin', 'wields a stolen honor blade', 'Killed Brad Pitt'),
-(18, 2, 'Johny Long-Legged', 'human', 'A humble human with muscly legs contributing to 90% of his height', 'Orphan of a giant and halfling', 'Silly guy');
+INSERT INTO `Characters` (`ID`, `isAt`, `name`, `race`, `description`, `gmNotes`, `partyNotes`, `img_src`) VALUES
+(1, 2, 'Wilhelm Riquet', 'human', 'thief', 'Passion for animals', 'Played by Steve', NULL),
+(2, 4, 'Commodore Stephahk', 'human', 'Recruitment officer at Fort Hranic', 'Rat who let attackers into fort', 'Weirdly chill guy', NULL),
+(3, 4, 'Renly Gokel', 'human', 'Recruit specializing in alchemy', 'Harmless?', 'He is an evil terrorist', NULL),
+(4, 2, 'Horacio Garzon', 'human', 'wine artisan', 'Passion for grapes', 'Played by George', 'imgs/horacio.png'),
+(5, 2, 'Jovi', 'Ka’Tavin', 'Animal sold in Siwanilua', 'Will be used to train ‘Ride’ skill', 'Bought by Wilhelm', NULL),
+(6, 4, 'Olver Thumbless', 'human', 'Recruit who has no thumbs', 'Dies in Hranic Raid', 'His name is now ‘Nubs’', NULL),
+(7, 5, 'Xiarkydoth', 'spider', 'Spider in Myrantahl Forests', 'Beast Aliyra encounters?', 'Hostile forest creature, dangerous but avoidable', NULL),
+(8, 2, 'Leon Septar', 'human', 'Bouncer, detective', 'Passion for sneaking', 'Played by Henry', NULL),
+(9, 5, 'Aliyra Maastehr', 'ghord', 'Apothecary from Ghordeiol', 'Wife to Ephram and Mother to Obram and Ilen', 'Helpful apothecary, potential ally for potions and healing', NULL),
+(10, 4, 'Chef Mya', 'human', 'Chef at Fort Hranic', 'Head chef', 'Falls in love with Wilhelm', NULL),
+(11, 2, 'Katka', 'Wajin', 'A cat like creatures with ivory tusks and four eyes', 'Hitsens Wajin', 'Cool cat that we must obtain', NULL),
+(12, 2, 'Healer Mam', 'elf', 'Decorated in trinkets and baubles', 'All poisons', 'Healer', NULL),
+(13, 2, 'Bram Ironfist', 'dwarf', 'Blacksmith in Fort Hranic', 'Provides weapons to guards', 'Gruff but reliable', NULL),
+(14, 3, 'Lysa Windmere', 'human', 'Traveling merchant', 'Knows trade routes', 'Often visits taverns', NULL),
+(15, 5, 'Torren Vale', 'elf', 'Forest scout', 'Watches for threats in Myrantahl Forest', 'Quiet and observant', NULL),
+(16, 9, 'Velcifer', 'Herdazian', 'Agent/Hunter', 'Serial Looter', 'Has not spoken an oath, mysterious backstory about Herdazian navy', NULL),
+(17, 9, 'Ylt', 'Iriali', 'Tall man with golden skin', 'wields a stolen honor blade', 'Killed Brad Pitt', NULL),
+(18, 2, 'Johny Long-Legged', 'human', 'A humble human with muscly legs contributing to 90% of his height', 'Orphan of a giant and halfling', 'Silly guy', NULL);
 
 -- --------------------------------------------------------
 
@@ -77,11 +78,11 @@ CREATE TABLE `Contains` (
 --
 
 INSERT INTO `Contains` (`container`, `containee`) VALUES
+(1, 2),
+(1, 4),
+(2, 3),
 (4, 7),
 (6, 1),
-(6, 2),
-(6, 3),
-(6, 4),
 (6, 5);
 
 -- --------------------------------------------------------
@@ -134,23 +135,24 @@ CREATE TABLE `Locations` (
   `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `description` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `gmNotes` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `partyNotes` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT ''
+  `partyNotes` varchar(1000) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `img_src` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `Locations`
 --
 
-INSERT INTO `Locations` (`ID`, `name`, `description`, `gmNotes`, `partyNotes`) VALUES
-(1, 'Kua Loranta', 'Desert nation ruled by the Kua Lorantene peoples', 'Under control of the foreign power Hrace', 'People have venomous spikes'),
-(2, 'Siwanilua', 'Wealthy city ruled by Queen Yttrilyna', 'Hrace has soft control over the Queen', 'The royalty are rich but the people are poor'),
-(3, 'Hanging Gardens of Azkenilua', 'Wonder built to the Goddess Azkenilua', 'Pilgrimage site', 'They do not grow grapes here'),
-(4, 'Hranic Fort', 'Military island off the coast of Kua Loranta', 'Session start. Raided by Kua Lorantene attackers', 'Renly is here and he must be dangerous…'),
-(5, 'Ghordeiol', 'Northern country also soft controlled by Hrace', 'Potential site for future campaigns', ''),
-(6, 'The World', 'This is the big world that contains everything', 'The good and evil happens here', ''),
-(7, 'Barracks', 'Barracks in a fort, weapons and stuff', '', ''),
-(8, 'Completely Unrelated World', 'This world doesn\'t have anything yet', '', ''),
-(9, 'Roshar', 'World where Stormlight Archives takes place', 'World for Stormlight tabletop RPG', 'Populations range from different kinds of Humans to crab people called Parshendi');
+INSERT INTO `Locations` (`ID`, `name`, `description`, `gmNotes`, `partyNotes`, `img_src`) VALUES
+(1, 'Kua Loranta', 'Desert nation ruled by the Kua Lorantene peoples', 'Under control of the foreign power Hrace', 'People have venomous spikes', 'imgs/kua_loranta.png'),
+(2, 'Siwanilua', 'Wealthy city ruled by Queen Yttrilyna', 'Hrace has soft control over the Queen', 'The royalty are rich but the people are poor', NULL),
+(3, 'Hanging Gardens of Azkenilua', 'Wonder built to the Goddess Azkenilua', 'Pilgrimage site', 'They do not grow grapes here', NULL),
+(4, 'Hranic Fort', 'Military island off the coast of Kua Loranta', 'Session start. Raided by Kua Lorantene attackers', 'Renly is here and he must be dangerous…', NULL),
+(5, 'Ghordeiol', 'Northern country also soft controlled by Hrace', 'Potential site for future campaigns', '', NULL),
+(6, 'The World', 'This is the big world that contains everything', 'The good and evil happens here', '', NULL),
+(7, 'Barracks', 'Barracks in a fort, weapons and stuff', '', '', NULL),
+(8, 'Completely Unrelated World', 'This world doesn\'t have anything yet', '', '', NULL),
+(9, 'Roshar', 'World where Stormlight Archives takes place', 'World for Stormlight tabletop RPG', 'Populations range from different kinds of Humans to crab people called Parshendi', NULL);
 
 -- --------------------------------------------------------
 
@@ -235,7 +237,7 @@ INSERT INTO `PlayingIn` (`user`, `plays`, `world`, `role`) VALUES
 ('Steve', 1, 6, 'player'),
 ('George', 4, 6, 'player'),
 ('Henry', 8, 6, 'player'),
-('George', NULL, 8, 'gm'),
+('George', NULL, 1, 'gm'),
 ('GM Individual', NULL, 6, 'gm');
 
 -- --------------------------------------------------------
@@ -254,32 +256,33 @@ CREATE TABLE `Props` (
   `itemType` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `rarity` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `quantity` int(11) NOT NULL DEFAULT '1',
-  `owner` int(11) DEFAULT NULL
+  `owner` int(11) DEFAULT NULL,
+  `img_src` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `Props`
 --
 
-INSERT INTO `Props` (`ID`, `isIn`, `name`, `description`, `gmNotes`, `partyNotes`, `itemType`, `rarity`, `quantity`, `owner`) VALUES
-(1, 2, 'Venom Spike', 'A spike harvested from a Kua Lorantene warrior', 'Can be used as a poison weapon', 'Found in Siwanilua market', 'Weapon', 'Uncommon', 3, 1),
-(2, 4, 'Alchemy Kit', 'A set of tools for brewing potions', 'Belongs to Renly', 'Confiscated after the raid', 'Tool', 'Common', 1, 3),
-(3, 2, 'Grape Wine', 'A fine bottle of Siwaniluan wine', 'Horacio made this himself', 'Worth good money', 'Consumable', 'Common', 5, 4),
-(4, 4, 'Fort Manifest', 'A list of all recruits at Hranic Fort', 'Contains evidence against Stephahk', 'We need to get this', 'Document', 'Rare', 1, 2),
-(5, 1, 'Desert Cloak', 'A cloak that blends into sand', 'Useful for desert travel', 'Bought in Kua Loranta', 'Armor', 'Common', 1, 8),
-(6, 4, 'Iron Sword', 'Standard weapon used by guards', 'Standard issue weapon kept in the fort armory', 'Useful if we need extra weapons', 'Weapon', 'Common', 1, 1),
-(7, 4, 'Healing Potion', 'Restores minor injuries', 'Stored by the fort medic', 'Can help after a fight', 'Consumable', 'Common', 1, 8),
-(8, 2, 'Travel Cloak', 'Protects against weather', 'Common travel gear sold by merchants', 'Good for long trips', 'Armor', 'Common', 1, NULL),
-(9, 4, 'Lantern', 'Provides light in dark areas', 'Used by guards and scouts at night', 'Helps light dark areas', 'Tool', 'Common', 2, NULL),
-(10, 4, 'Rope', 'Useful for climbing or tying', 'Stored with other travel and climbing gear', 'Could be useful for climbing or tying things down', 'Tool', 'Common', 1, NULL),
-(11, 5, 'Herbal Remedy Kit', 'Basic kit used to treat wounds and poison', 'Can stabilize characters without magic', 'Useful for travel and emergencies', 'Tool', 'Common', 1, NULL),
-(12, 1, 'Rock', 'Just a normal rock', 'Has a evil demon inside', '', 'Miscellaneous', 'Common', 1, 8),
-(13, 1, 'Grass', 'A single blade of grass', '', '', 'Miscellaneous', 'Common', 75, 8),
-(14, 1, 'Stale Sandwich', 'It doesn\'t taste great but it still edible', 'Spoiled and poisonous', 'May be spoiled', 'Consumable', 'Common', 3, 8),
-(15, 1, 'Bucket Hat', 'Protects from the sun', '', 'Same color as desert cloak', 'Armor', 'Uncommon', 1, 8),
-(16, 1, 'Rope', '1 foot of hempen rope', '', '', 'Tool', 'Common', 50, 8),
-(17, 1, 'Ancient Sword', 'There is myth of an ancient sword somewhere lost in this nation', 'Buried under a tree', '', 'Weapon', 'Rare', 1, NULL),
-(18, 1, 'Glasswork', 'Glassblowing is a prized art here, so it can be quite valuable when done well.', '', '', 'Miscellaneous', 'Uncommon', 4, NULL);
+INSERT INTO `Props` (`ID`, `isIn`, `name`, `description`, `gmNotes`, `partyNotes`, `itemType`, `rarity`, `quantity`, `owner`, `img_src`) VALUES
+(1, 2, 'Venom Spike', 'A spike harvested from a Kua Lorantene warrior', 'Can be used as a poison weapon', 'Found in Siwanilua market', 'Weapon', 'Uncommon', 3, 1, NULL),
+(2, 4, 'Alchemy Kit', 'A set of tools for brewing potions', 'Belongs to Renly', 'Confiscated after the raid', 'Tool', 'Common', 1, 3, NULL),
+(3, 2, 'Grape Wine', 'A fine bottle of Siwaniluan wine', 'Horacio made this himself', 'Worth good money', 'Consumable', 'Common', 5, 4, NULL),
+(4, 4, 'Fort Manifest', 'A list of all recruits at Hranic Fort', 'Contains evidence against Stephahk', 'We need to get this', 'Document', 'Rare', 1, 2, NULL),
+(5, 1, 'Desert Cloak', 'A cloak that blends into sand', 'Useful for desert travel', 'Bought in Kua Loranta', 'Armor', 'Common', 1, 8, NULL),
+(6, 4, 'Iron Sword', 'Standard weapon used by guards', 'Standard issue weapon kept in the fort armory', 'Useful if we need extra weapons', 'Weapon', 'Common', 1, 1, NULL),
+(7, 4, 'Healing Potion', 'Restores minor injuries', 'Stored by the fort medic', 'Can help after a fight', 'Consumable', 'Common', 1, 8, NULL),
+(8, 2, 'Travel Cloak', 'Protects against weather', 'Common travel gear sold by merchants', 'Good for long trips', 'Armor', 'Common', 1, NULL, NULL),
+(9, 4, 'Lantern', 'Provides light in dark areas', 'Used by guards and scouts at night', 'Helps light dark areas', 'Tool', 'Common', 2, NULL, NULL),
+(10, 4, 'Rope', 'Useful for climbing or tying', 'Stored with other travel and climbing gear', 'Could be useful for climbing or tying things down', 'Tool', 'Common', 1, NULL, NULL),
+(11, 5, 'Herbal Remedy Kit', 'Basic kit used to treat wounds and poison', 'Can stabilize characters without magic', 'Useful for travel and emergencies', 'Tool', 'Common', 1, NULL, NULL),
+(12, 1, 'Rock', 'Just a normal rock', 'Has a evil demon inside', '', 'Miscellaneous', 'Common', 1, 8, NULL),
+(13, 1, 'Grass', 'A single blade of grass', '', '', 'Miscellaneous', 'Common', 75, 8, NULL),
+(14, 1, 'Stale Sandwich', 'It doesn\'t taste great but it still edible', 'Spoiled and poisonous', 'May be spoiled', 'Consumable', 'Common', 3, 8, NULL),
+(15, 1, 'Bucket Hat', 'Protects from the sun', '', 'Same color as desert cloak', 'Armor', 'Uncommon', 1, 8, NULL),
+(16, 1, 'Rope', '1 foot of hempen rope', '', '', 'Tool', 'Common', 50, 8, NULL),
+(17, 1, 'Ancient Sword', 'There is myth of an ancient sword somewhere lost in this nation', 'Buried under a tree', '', 'Weapon', 'Rare', 1, NULL, NULL),
+(18, 1, 'Glasswork', 'Glassblowing is a prized art here, so it can be quite valuable when done well.', '', '', 'Miscellaneous', 'Uncommon', 4, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -319,8 +322,7 @@ CREATE TABLE `WorldSecurity` (
 --
 
 INSERT INTO `WorldSecurity` (`worldID`, `securityMeasure`) VALUES
-(6, 'plain'),
-(8, 'hash');
+(6, 'plain');
 
 --
 -- Indexes for dumped tables
@@ -422,7 +424,7 @@ ALTER TABLE `Props`
 --
 DROP TABLE IF EXISTS `dm_inventory_view`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`parkerholland04`@`localhost` SQL SECURITY DEFINER VIEW `dm_inventory_view`  AS SELECT `Characters`.`name` AS `OwnerName`, `Props`.`name` AS `ItemName`, `Props`.`itemType` AS `ItemType`, `Props`.`description` AS `ItemDescription`, `Props`.`gmNotes` AS `ItemNotes`, `Props`.`quantity` AS `QuantityOwned` FROM (`Characters` join `Props`) WHERE (`Props`.`owner` = `Characters`.`ID`) ORDER BY `Characters`.`name` ASC ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`loganmccue`@`localhost` SQL SECURITY DEFINER VIEW `dm_inventory_view`  AS SELECT `Characters`.`name` AS `OwnerName`, `Props`.`name` AS `ItemName`, `Props`.`itemType` AS `ItemType`, `Props`.`description` AS `ItemDescription`, `Props`.`gmNotes` AS `ItemNotes`, `Props`.`quantity` AS `QuantityOwned` FROM (`Characters` join `Props`) WHERE (`Props`.`owner` = `Characters`.`ID`) ORDER BY `Characters`.`name` ASC ;
 
 -- --------------------------------------------------------
 
@@ -431,7 +433,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`parkerholland04`@`localhost` SQL SECURITY DE
 --
 DROP TABLE IF EXISTS `player_NPC_view`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`parkerholland04`@`localhost` SQL SECURITY DEFINER VIEW `player_NPC_view`  AS SELECT `Characters`.`name` AS `Name`, `Characters`.`race` AS `Race`, `Characters`.`description` AS `Description`, `Characters`.`partyNotes` AS `Notes`, `Locations`.`name` AS `Location` FROM (`Characters` join `Locations`) WHERE ((`Characters`.`isAt` = `Locations`.`ID`) AND (not(`Characters`.`ID` in (select `Players`.`ID` from `Players`)))) ORDER BY `Locations`.`name` ASC ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`loganmccue`@`localhost` SQL SECURITY DEFINER VIEW `player_NPC_view`  AS SELECT `Characters`.`name` AS `Name`, `Characters`.`race` AS `Race`, `Characters`.`description` AS `Description`, `Characters`.`partyNotes` AS `Notes`, `Locations`.`name` AS `Location` FROM (`Characters` join `Locations`) WHERE ((`Characters`.`isAt` = `Locations`.`ID`) AND (not(`Characters`.`ID` in (select `Players`.`ID` from `Players`)))) ORDER BY `Locations`.`name` ASC ;
 
 --
 -- Constraints for dumped tables
