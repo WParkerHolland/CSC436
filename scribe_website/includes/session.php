@@ -56,3 +56,60 @@ use const Dom\STRING_SIZE_ERR;
 				
 		return pdo($pdo, $sql, ["uName" => $username, "uPass"=> $password])->fetch();
 	}
+
+	function update_POST(string | null $locID, string | null $charID, string | null $propID, string | null $role = null){
+		$_POST['locID'] = $locID;
+		$_POST['charID'] = $charID;
+		$_POST['propID'] = $propID;
+		$_POST['role'] = $role;
+	}
+
+	function update_session(){
+		$_SESSION['locID'] = $_POST['locID'];
+		$_SESSION['charID'] = $_POST['charID'];
+		$_SESSION['propID'] = $_POST['propID'];
+		$_SESSION['role'] = $_POST['role'];
+	}
+
+	// Get all possible location IDs in a world
+	// Recurses through all locations, adding them to array of locationName: locationID pairs
+	function get_locations($pdo, $worldID){
+		$sql = "SELECT Locations.name AS locName, Locations.ID AS locID
+				FROM Locations
+				JOIN Contains on Locations.ID = Contains.containee
+				WHERE Contains.container = :worldID;";
+		
+		$results = pdo($pdo, $sql, [":worldID" => $worldID])->fetchAll();
+		$locs = [];
+
+		foreach ($results as $result){
+			$locs[$result["name"]] = $result["ID"];
+			$locs = [...$locs, ...get_locations($pdo, $result["ID"])];
+		}
+
+		return $locs;
+	}
+
+	// Get a list of all possible characters in array of characterName: characterID pairs
+	// Input is array of of locationName: locationID pairs
+	function get_characters($pdo, $locations){
+		$sql = "SELECT Characters.name as charName, Characters.ID as charID
+				FROM Characters
+				LEFT JOIN Players ON Players.ID = Characters.ID
+				LEFT JOIN Creatures ON Creatures.ID = Characters.ID
+				LEFT JOIN NPCs ON NPCs.ID = Characters.ID
+				WHERE Characters.isAt = :id;";
+		$chars = [];
+
+		// For each location
+		foreach($locations as $locName => $locID){
+			$results = pdo($pdo, $sql, [":id" => $locID]);
+
+			// For each character in the location
+			foreach ($results as $result){
+				$chars[$result["charName"]] = $result["charID"];
+			}
+		}
+
+		return $chars;
+	}
