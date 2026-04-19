@@ -1,16 +1,62 @@
 <?php
+    require_once('includes/database-connection.php');
+
+    // Reading POST request
+    $char_ID;
+	$role;
+	
+	if($_SERVER["REQUEST_METHOD"] == "POST"){
+		$msg = explode('&', $_POST['msg']);
+		$char_ID = $msg[0];
+		$role = $msg[1];
+
+        if(count($msg) > 2){
+            // Player editing their own character
+            if($role == 'player' && $_POST['name']){
+                $sql = "UPDATE Characters
+                        SET Characters.name = :charName, Characters.race = :race, Characters.description = :descr, Characters.partyNotes = :partyNotes
+                        WHERE Characters.ID = :ID;";
+                pdo($pdo, $sql, [':charName' => $_POST['name'], ':race' => $_POST['race'], ':descr' => $_POST['description'], ':partyNotes' => $_POST['partyNotes'], ':ID' => $char_ID]);
+            } elseif($role == 'gm'){
+                $sql = "UPDATE Characters
+                        SET Characters.name = :charName, Characters.race = :race, Characters.description = :descr, Characters.gmNotes = :gmNotes
+                        WHERE Characters.ID = :ID;";
+                pdo($pdo, $sql, [':charName' => $_POST['name'], ':race' => $_POST['race'], ':descr' => $_POST['description'], ':gmNotes' => $_POST['gmNotes'], ':ID' => $char_ID]);
+            } else {
+                $sql = "UPDATE Characters
+                        SET Characters.partyNotes = :partyNotes
+                        WHERE Characters.ID = :ID;";
+                pdo($pdo, $sql, [':partyNotes' => $_POST['partyNotes'], ':ID' => $char_ID]);
+            }
+
+            if(key_exists('level', $_POST)){
+                $sql = "UPDATE Players
+                        SET Players.level = :lvl, Players.combat_style = :style
+                        WHERE Players.ID = :ID;";
+                pdo($pdo, $sql, [':lvl' => $_POST['level'], ':style' => $_POST['combat_style'], ':ID' => $char_ID]);
+            }
+
+            if(key_exists('population', $_POST)){
+                $sql = "UPDATE Creatures
+                        SET Creatures.population = :pop, Creatures.ability = :ability
+                        WHERE Creatures.ID = :ID;";
+                pdo($pdo, $sql, [':pop' => $_POST['population'], ':ability' => $_POST['ability'], ':ID' => $char_ID]);
+            }
+
+            if(key_exists('occupation', $_POST)){
+                $sql = "UPDATE NPCs
+                        SET NPCs.opinions = :opinions, NPCs.occupation = :occupation, NPCs.gold = :gold
+                        WHERE NPCs.ID = :ID;";
+                pdo($pdo, $sql, [':opinions' => $_POST['opinions'], ':occupation' => $_POST['occupation'], ':gold' => $_POST['gold'], ':ID' => $char_ID]);
+            }
+        }
+	}
 
     /* TO-DO: Include header.php
               Hint: header.php is inside the includes folder and already connects to the database
     */
 
     include("./includes/header.php");
-
-    // Retrieve the value of the 'itemnum' parameter from the URL query string
-	//          Example URL: .../item.php?itemnum=0001
-	$char_id = $_GET['charnum'];
-
-
 
     /* TO-DO: Create a function that retrieves ALL toy and manufacturer information 
               from the database based on the itemnum parameter from the URL.
@@ -38,7 +84,7 @@
 
 
     /* TO-DO: Call function to retrieve character information */
-    $item = get_char_info($pdo, $char_id);
+    $item = get_char_info($pdo, $char_ID);
 
 ?>
 
@@ -51,41 +97,112 @@
 
         </div>
 
-        <div class="toy-details">
+        <form method="POST" action="location.php">
+            <button type="submit" name="msg" value="<?=$char_ID?>&<?=$role?>&charBack">Back</button>
+        </form>
 
-            <!-- TO-DO: Display the toy name -->
-            <h1><?= $item["name"] ?></h1>
+        <form method="POST" action="char.php" class="toy-details">
+            <!-- GM View -->
+            <?php if($role == 'gm') { ?>
+                <label for="name">Name:</label>
+				<input type="text" value="<?=$item["name"]?>" id="name" name="name">
+                <label for="race">Race:</label>
+				<input type="text" value="<?=$item["race"]?>" id="race" name="race">
+                <label for="description">Description:</label>
+                <input type="text" value="<?=$item["description"]?>" id="description" name="description">
+                <label for="gmNotes">Private Notes:</label>
+				<input type="text" value="<?=$item["gmNotes"]?>" id="gmNotes" name="gmNotes">
+                <label for="partyNotes">Party's Notes:</label>
+				<p type="text" id="partyNotes"><?=$item["partyNotes"]?></p>
 
-            <h3>Character Information</h3>
-            <p><strong>Race:</strong> <?= $item["race"] ?></p>
-            <p><strong>Description:</strong> <?= $item["description"] ?></p>
+                <!-- Player specific info -->
+                <?php if ($item["playedBy"]) { ?>
+                    <br />
+                    <h3>Player Information</h3>
+                    <p><strong>Played By:</strong> <?= $item["playedBy"] ?></p>
+                    <label for="level">Level:</label>
+				    <input type="number" value="<?=$item["level"]?>" id="level" name="level">
+                    <label for="combat_style">Combat Style:</label>
+				    <input type="text" value="<?=$item["combat_style"]?>" id="combat_style" name="combat_style">
+                <?php } ?>
 
-            <!-- Player specific info -->
-            <?php if ($item["playedBy"]) { ?>
+                <!-- Creature specific info -->
+                <?php if ($item["population"]) { ?>
+                    <br />
+                    <h3>Species Information</h3>
+                    <label for="population">Population:</label>
+				    <input type="number" value="<?=$item["population"]?>" id="population" name="population">
+                    <label for="ability">Ability:</label>
+				    <input type="text" value="<?=$item["ability"]?>" id="ability" name="ability">
+                <?php } ?>
+
+                <!-- NPC specific info -->
+                <?php if ($item["occupation"]) { ?>
+                    <br />
+                    <h3>NPC Information</h3>
+                    <label for="occupation">Occupation:</label>
+				    <input type="text" value="<?=$item["occupation"]?>" id="occupation" name="occupation">
+                    <label for="opinions">Opinions:</label>
+				    <input type="text" value="<?=$item["opinions"]?>" id="opinions" name="opinions">
+                    <label for="gold">Gold:</label>
+				    <input type="number" value="<?=$item["gold"]?>" id="gold" name="gold">
+                <?php } ?>
+
+            <!-- Player's Character View -->
+            <?php } elseif(($item["playedBy"] && $item["playedBy"] == $_SESSION['username'])) { ?>
+                <label for="name">Name:</label>
+				<input type="text" value="<?=$item["name"]?>" id="name" name="name">
+                <label for="race">Race:</label>
+				<input type="text" value="<?=$item["race"]?>" id="race" name="race">
+                <label for="description">Description:</label>
+                <input type="text" value="<?=$item["description"]?>" id="description" name="description">
+                <label for="partyNotes">Party's Notes:</label>
+                <input type="text" id="partyNotes" name="partyNotes" value=<?= $item["partyNotes"]?>></p>
+
                 <br />
                 <h3>Player Information</h3>
                 <p><strong>Played By:</strong> <?= $item["playedBy"] ?></p>
-                <p><strong>Level:</strong> <?= $item["level"] ?></p>
-                <p><strong>Combat Style:</strong> <?= $item["combat_style"] ?></p>
-            <?php } ?>
+                <label for="level">Level:</label>
+                <input type="number" value="<?=$item["level"]?>" id="level" name="level">
+                <label for="combat_style">Combat Style:</label>
+                <input type="text" value="<?=$item["combat_style"]?>" id="combat_style" name="combat_style">
+            <?php } else { ?>
+                <!-- TO-DO: Display the toy name -->
+                <h1><?= $item["name"] ?></h1>
 
-            <!-- Creature specific info -->
-            <?php if ($item["population"]) { ?>
-                <br />
-                <h3>Species Information</h3>
-                <p><strong>Population:</strong> <?= $item["population"] ?></p>
-                <p><strong>Ability:</strong> <?= $item["ability"] ?></p>
-            <?php } ?>
+                <h3>Character Information</h3>
+                <p><strong>Race:</strong> <?= $item["race"] ?></p>
+                <p><strong>Description:</strong> <?= $item["description"] ?></p>
+                <p><strong>Party Notes:</strong> <Input id="partyNotes" name="partyNotes" value=<?= $item["partyNotes"]?>></p>
 
-            <!-- NPC specific info -->
-            <?php if ($item["occupation"]) { ?>
-                <br />
-                <h3>NPC Information</h3>
-                <p><strong>Occupation:</strong> <?= $item["occupation"] ?></p>
-                <p><strong>Opinions:</strong> <?= $item["opinions"] ?></p>
-                <p><strong>Gold:</strong> <?= $item["gold"] ?></p>
+                <!-- Player specific info -->
+                <?php if ($item["playedBy"]) { ?>
+                    <br />
+                    <h3>Player Information</h3>
+                    <p><strong>Played By:</strong> <?= $item["playedBy"] ?></p>
+                    <p><strong>Level:</strong> <?= $item["level"] ?></p>
+                    <p><strong>Combat Style:</strong> <?= $item["combat_style"] ?></p>
+                <?php } ?>
+
+                <!-- Creature specific info -->
+                <?php if ($item["population"]) { ?>
+                    <br />
+                    <h3>Species Information</h3>
+                    <p><strong>Population:</strong> <?= $item["population"] ?></p>
+                    <p><strong>Ability:</strong> <?= $item["ability"] ?></p>
+                <?php } ?>
+
+                <!-- NPC specific info -->
+                <?php if ($item["occupation"]) { ?>
+                    <br />
+                    <h3>NPC Information</h3>
+                    <p><strong>Occupation:</strong> <?= $item["occupation"] ?></p>
+                    <p><strong>Opinions:</strong> <?= $item["opinions"] ?></p>
+                    <p><strong>Gold:</strong> <?= $item["gold"] ?></p>
+                <?php } ?>
             <?php } ?>
-        </div>
+            <button type="submit" name="msg" value="<?=$char_ID?>&<?=$role?>&edit">Save Changes</button>
+        </form>
     </div>
 </section>
 

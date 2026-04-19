@@ -41,27 +41,27 @@
 	<?php foreach ($worlds as $world) { ?>
 
 		<!-- LOCATION CARD START -->
-		<div class="toy-card">
+		<form class="toy-card" method="POST" action="location.php">
 			<!-- TO-DO: Create a hyperlink to location.php and pass the location number as a URL parameter -->
 			<?php if ($world["role"] == "gm") { ?>
-				<a href="location.php?locnum=<?= $world["loc_id"] ?>">
+				<button type="submit" name="msg" value="<?=$world["loc_id"]?>&gm">
 
 					<!-- TO-DO: Display the world image and update the alt text to the world name -->
 					<img src="<?= $world["loc_image"] ?>" alt="<?= $world["loc_name"] ?>">
-				</a>
+				</button>
 
 				<!-- TO-DO: Display the name of the world -->
 				<h2>Game Master: <?= $world["loc_name"] ?></h2>
 			<?php } else { ?>
-				<a href="location.php?locnum=<?= $world["isAt"] ?>">
+				<button name="msg" value="<?=$world["isAt"]?>&player">
 
 					<!-- TO-DO: Display the character image and update the alt text to the character name -->
 					<img src="<?= $world["char_image"] ?>" alt="<?= $world["char_name"] ?>">
-				</a>
+				</button>
 				<!-- TO-DO: Display the name of the character -->
 				<h2>Player: <?= $world["char_name"] ?></h2>
 			<?php } ?>
-		</div>
+		</form>
 		<!-- LOCATION CARD END -->
 
 	<?php } ?>
