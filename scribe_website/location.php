@@ -1,7 +1,6 @@
 <?php 
 	require_once('includes/database-connection.php');
 
-	// Reading POST request
 	$loc_ID;
 	$role;
 	
@@ -10,96 +9,143 @@
 		$loc_ID = $msg[0];
 		$role = $msg[1];
 
-		if(count($msg) == 3){
-			// Check if back command
+		if(count($msg) >= 3){
 			switch($msg[2]){
 				case 'back':
-					$sql = "SELECT container
-							FROM Contains
-							WHERE Contains.containee = :ID;";
+					$sql = "SELECT container FROM Contains WHERE Contains.containee = :ID;";
 					$result = pdo($pdo, $sql, [':ID' => $loc_ID])->fetch();
-
 					if($result){
 						$loc_ID = $result['container'];
 					} else {
-						// Current location is root world
 						header('Location: dashboard.php');
 					}
 				break;
-			 	case 'propBack':
-					$sql = "SELECT isIn
-							FROM Props
-							WHERE Props.ID = :ID;";
+				case 'propBack':
+					$sql = "SELECT isIn FROM Props WHERE Props.ID = :ID;";
 					$result = pdo($pdo, $sql, [':ID' => $loc_ID])->fetch();
 					$loc_ID = $result['isIn'];
 				break;
 				case 'charBack':
-					$sql = "SELECT isAt
-							FROM Characters
-							WHERE Characters.ID = :ID;";
+					$sql = "SELECT isAt FROM Characters WHERE Characters.ID = :ID;";
 					$result = pdo($pdo, $sql, [':ID' => $loc_ID])->fetch();
 					$loc_ID = $result['isAt'];
 				break;
-			}
-
-			// Check if msg is sent with extra 'edit' string
-			if($msg[2] == 'edit'){
-				switch($role){
-					case 'gm':
-						$sql = "UPDATE Locations
-								SET Locations.name = :locName, Locations.description = :descr, Locations.gmNotes = :gmNotes
-								WHERE Locations.ID = :ID;";
-						pdo($pdo, $sql, [':locName' => $_POST['name'], ':descr' => $_POST['description'], ':gmNotes' => $_POST['gmNotes'], ':ID' => $loc_ID]);
-					break;
-					case 'player':
-						$sql = "UPDATE Locations
-								SET Locations.partyNotes = :partyNotes
-								WHERE Locations.ID = :ID;";
-						pdo($pdo, $sql, [':partyNotes' => $_POST['partyNotes'], ':ID' => $loc_ID]);
-					break;
-				}
+				case 'edit':
+					switch($role){
+						case 'gm':
+							$sql = "UPDATE Locations SET Locations.name = :locName, Locations.description = :descr, Locations.gmNotes = :gmNotes WHERE Locations.ID = :ID;";
+							pdo($pdo, $sql, [':locName' => $_POST['name'], ':descr' => $_POST['description'], ':gmNotes' => $_POST['gmNotes'], ':ID' => $loc_ID]);
+						break;
+						case 'player':
+							$sql = "UPDATE Locations SET Locations.partyNotes = :partyNotes WHERE Locations.ID = :ID;";
+							pdo($pdo, $sql, [':partyNotes' => $_POST['partyNotes'], ':ID' => $loc_ID]);
+						break;
+					}
+				break;
+				case 'add':
+					$type = $msg[3];
+					switch($type){
+						case 'location':
+							$sql = "INSERT INTO Locations (name, description, img_src) VALUES (:name, :description, :img_src)";
+							pdo($pdo, $sql, [':name' => $_POST['name'], ':description' => $_POST['description'], ':img_src' => 'imgs/location_default.png']);
+							$newID = $pdo->lastInsertId();
+							$sql = "INSERT INTO Contains (container, containee) VALUES (:container, :containee)";
+							pdo($pdo, $sql, [':container' => $loc_ID, ':containee' => $newID]);
+						break;
+						case 'npc':
+							$sql = "INSERT INTO Characters (name, description, img_src, isAt) VALUES (:name, :description, :img_src, :isAt)";
+							pdo($pdo, $sql, [':name' => $_POST['name'], ':description' => $_POST['description'], ':img_src' => 'imgs/npc_default.png', ':isAt' => $loc_ID]);
+							$newID = $pdo->lastInsertId();
+							$sql = "INSERT INTO NPCs (ID) VALUES (:id)";
+							pdo($pdo, $sql, [':id' => $newID]);
+						break;
+						case 'creature':
+							$sql = "INSERT INTO Characters (name, description, img_src, isAt) VALUES (:name, :description, :img_src, :isAt)";
+							pdo($pdo, $sql, [':name' => $_POST['name'], ':description' => $_POST['description'], ':img_src' => 'imgs/creature_default.png', ':isAt' => $loc_ID]);
+							$newID = $pdo->lastInsertId();
+							$sql = "INSERT INTO Creatures (ID) VALUES (:id)";
+							pdo($pdo, $sql, [':id' => $newID]);
+						break;
+						case 'player':
+							$sql = "INSERT INTO Characters (name, description, img_src, isAt) VALUES (:name, :description, :img_src, :isAt)";
+							pdo($pdo, $sql, [':name' => $_POST['name'], ':description' => $_POST['description'], ':img_src' => 'imgs/players_default.png', ':isAt' => $loc_ID]);
+							$newID = $pdo->lastInsertId();
+							$sql = "INSERT INTO Players (ID) VALUES (:id)";
+							pdo($pdo, $sql, [':id' => $newID]);
+						break;
+						case 'prop':
+							$sql = "INSERT INTO Props (name, description, img_src, isIn) VALUES (:name, :description, :img_src, :isIn)";
+							pdo($pdo, $sql, [':name' => $_POST['name'], ':description' => $_POST['description'], ':img_src' => 'imgs/props_default.png', ':isIn' => $loc_ID]);
+						break;
+					}
+				break;
+				case 'toggle':
+					$type = $msg[3];
+					$entryID = $msg[4];
+					switch($type){
+						case 'location':
+							$sql = "UPDATE Locations SET visible = NOT visible WHERE ID = :ID";
+							pdo($pdo, $sql, [':ID' => $entryID]);
+						break;
+						case 'character':
+							$sql = "UPDATE Characters SET visible = NOT visible WHERE ID = :ID";
+							pdo($pdo, $sql, [':ID' => $entryID]);
+						break;
+						case 'prop':
+							$sql = "UPDATE Props SET visible = NOT visible WHERE ID = :ID";
+							pdo($pdo, $sql, [':ID' => $entryID]);
+						break;
+					}
+				break;
 			}
 		}
 	}
 
-    /* TO-DO: Include header.php
-              Hint: header.php is inside the includes folder and already connects to the database
-    */
-
 	include("./includes/header.php");
 
-    /*
-	 * Retrieve toy information from the database based on the toy ID.
-	 * 
-	 * @param PDO $pdo       An instance of the PDO class.
-	 * @param string $id     The ID of the toy to retrieve.
-	 * @return array|null    An associative array containing the toy information, or null if no toy is found.
-	 */
-	function get_nested_entries(PDO $pdo, $loc_ID) {
+	function get_nested_entries(PDO $pdo, $loc_ID, $role) {
+		// Added visibility filter so GM can choose what items are visible to players
+		$visibleFilter = $role == 'player' ? 'AND visible = 1' : '';
+
 		$location = pdo($pdo, "SELECT * FROM Locations WHERE ID = :locID", [":locID" => $loc_ID])->fetch();
-		
-		$characters = pdo($pdo, "SELECT * FROM Characters WHERE isAt = :locID", [":locID" => $loc_ID])->fetchAll();
-		
-		$props = pdo($pdo, "SELECT * FROM Props WHERE isIn = :locID", [":locID" => $loc_ID])->fetchAll();
+
+		$players = pdo($pdo, "SELECT Characters.*, Players.level, Players.playedBy, Players.combat_style 
+							FROM Characters 
+							JOIN Players ON Players.ID = Characters.ID
+							WHERE Characters.isAt = :locID", [":locID" => $loc_ID])->fetchAll();
+
+		$creatures = pdo($pdo, "SELECT Characters.*, Creatures.population, Creatures.ability 
+								FROM Characters 
+								JOIN Creatures ON Creatures.ID = Characters.ID
+								WHERE Characters.isAt = :locID $visibleFilter", [":locID" => $loc_ID])->fetchAll();
+
+		$npcs = pdo($pdo, "SELECT Characters.*, NPCs.opinions, NPCs.occupation, NPCs.gold 
+							FROM Characters 
+							JOIN NPCs ON NPCs.ID = Characters.ID
+							WHERE Characters.isAt = :locID $visibleFilter", [":locID" => $loc_ID])->fetchAll();
+
+		$props = pdo($pdo, "SELECT * FROM Props WHERE isIn = :locID $visibleFilter", [":locID" => $loc_ID])->fetchAll();
 
 		$sublocations = pdo($pdo, "SELECT Locations.* FROM Locations 
 									JOIN Contains ON Contains.containee = Locations.ID
-									WHERE Contains.container = :locID", [":locID" => $loc_ID])->fetchAll();
+									WHERE Contains.container = :locID $visibleFilter", [":locID" => $loc_ID])->fetchAll();
 
 		return [
-			"location" => $location, 
-			"characters" => $characters, 
+			"location" => $location,
+			"players" => $players,
+			"creatures" => $creatures,
+			"npcs" => $npcs,
 			"props" => $props,
 			"sublocations" => $sublocations
 		];
 	}
 
-	$items = get_nested_entries($pdo, $loc_ID);                          // Retrieve info about toy with ID '0001' from the database using provided PDO connection
+$items = get_nested_entries($pdo, $loc_ID, $role);
+
 ?>
 
 <div class="location-header">
-	<!-- Display location information -->
-	 <form method="POST" action="location.php">
+	<form method="POST" action="location.php">
 		<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&back">Back</button>
 		<?php if($role == "player"){ ?>
 			<h1><?= $items["location"]["name"] ?></h1>	
@@ -107,54 +153,171 @@
 			<label for="partyNotes">Party's Notes:</label>
 			<input type="text" value="<?=$items["location"]["partyNotes"]?>" id="partyNotes" name="partyNotes">
 		<?php } else { ?>
-				<label for="name">Name:</label>
-				<input type="text" value="<?=$items["location"]["name"]?>" id="name" name="name">
-				<label for="description">Description:</label>
-				<input type="text" value="<?=$items["location"]["description"]?>" id="description" name="description">
-				<label for="gmNotes">Private Notes:</label>
-				<input type="text" value="<?=$items["location"]["gmNotes"]?>" id="gmNotes" name="gmNotes">
-				<label for="partyNotes">Party's Notes:</label>
-				<p type="text" id="partyNotes"><?=$items["location"]["partyNotes"]?></p>
+			<label for="name">Name:</label>
+			<input type="text" value="<?=$items["location"]["name"]?>" id="name" name="name">
+			<label for="description">Description:</label>
+			<input type="text" value="<?=$items["location"]["description"]?>" id="description" name="description">
+			<label for="gmNotes">Private Notes:</label>
+			<input type="text" value="<?=$items["location"]["gmNotes"]?>" id="gmNotes" name="gmNotes">
+			<label for="partyNotes">Party's Notes:</label>
+			<input type="text" value="<?=$items["location"]["partyNotes"]?>" id="partyNotes" disabled>
 		<?php } ?>
 		<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&edit">Save Changes</button>
 	</form>
 </div>
 
 <section class="toy-catalog">
-	<!-- Displays all sublocation cards -->
-	<h2 class="section-label">Locations</h2>
+
+	<!-- Sublocations -->
+	<h2 class="section-label">Locations
+		<?php if($role == "gm"){ ?>
+			<button onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">+ Add</button>
+			<form method="POST" action="location.php" style="display:none;">
+				<input type="text" name="name" placeholder="Name" required>
+				<input type="text" name="description" placeholder="Description">
+				<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&add&location">Save</button>
+				<button type="button" onclick="this.parentElement.style.display='none'; this.parentElement.previousElementSibling.style.display='inline';">Cancel</button>
+			</form>
+		<?php } ?>
+	</h2>
 	<?php foreach ($items["sublocations"] as $sub) { ?>
-		<form class="toy-card" method="POST" action="location.php">
-			<button type="submit" name="msg" value="<?=$sub["ID"]?>&<?=$role?>">
-				<img src="<?= $sub["img_src"] ?>" alt="<?= $sub["name"] ?>">
-			</button>
+		<div class="toy-card">
+			<form method="POST" action="location.php">
+				<button type="submit" name="msg" value="<?=$sub["ID"]?>&<?=$role?>">
+					<img src="<?= $sub["img_src"] ?>" alt="<?= $sub["name"] ?>">
+				</button>
+			</form>
 			<h2><?= $sub["name"] ?></h2>
 			<p><?= $sub["description"] ?></p>
-		</form>
+			<!-- Toggle visibility -->
+			<?php if($role == 'gm'){ ?>
+				<form method="POST" action="location.php">
+					<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&toggle&location&<?=$sub["ID"]?>">
+						<?= $sub["visible"] ? "Hide from Players" : "Reveal to Players" ?>
+					</button>
+				</form>
+			<?php } ?>
+		</div>
 	<?php } ?>
 
-	<!-- Displays all character cards -->
-	<h2 class="section-label">Characters</h2>
-	<?php foreach ($items["characters"] as $char) { ?>
-		<form class="toy-card" method="POST" action="char.php">
-			<button type="submit" name="msg" value="<?=$char["ID"]?>&<?=$role?>">
-				<img src="<?= $char["img_src"] ?>" alt="<?= $char["name"] ?>">
-			</button>
+	<!-- Players -->
+	<h2 class="section-label">Players
+		<?php if($role == "gm"){ ?>
+			<button onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">+ Add</button>
+			<form method="POST" action="location.php" style="display:none;">
+				<input type="text" name="name" placeholder="Name" required>
+				<input type="text" name="description" placeholder="Description">
+				<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&add&player">Save</button>
+				<button type="button" onclick="this.parentElement.style.display='none'; this.parentElement.previousElementSibling.style.display='inline';">Cancel</button>
+			</form>
+		<?php } ?>
+	</h2>
+	<?php foreach ($items["players"] as $char) { ?>
+		<div class="toy-card">
+			<form method="POST" action="char.php">
+				<button type="submit" name="msg" value="<?=$char["ID"]?>&<?=$role?>">
+					<img src="<?= $char["img_src"] ?>" alt="<?= $char["name"] ?>">
+				</button>
+			</form>
 			<h2><?= $char["name"] ?></h2>
 			<p><?= $char["description"] ?></p>
-		</form>
+		</div>
 	<?php } ?>
 
-	<!-- Displays all prop cards -->
-	<h2 class="section-label">Props</h2>
+	<!-- Creatures -->
+	<h2 class="section-label">Creatures
+		<?php if($role == "gm"){ ?>
+			<button onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">+ Add</button>
+			<form method="POST" action="location.php" style="display:none;">
+				<input type="text" name="name" placeholder="Name" required>
+				<input type="text" name="description" placeholder="Description">
+				<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&add&creature">Save</button>
+				<button type="button" onclick="this.parentElement.style.display='none'; this.parentElement.previousElementSibling.style.display='inline';">Cancel</button>
+			</form>
+		<?php } ?>
+	</h2>
+	<?php foreach ($items["creatures"] as $char) { ?>
+		<div class="toy-card">
+			<form method="POST" action="char.php">
+				<button type="submit" name="msg" value="<?=$char["ID"]?>&<?=$role?>">
+					<img src="<?= $char["img_src"] ?>" alt="<?= $char["name"] ?>">
+				</button>
+			</form>
+			<h2><?= $char["name"] ?></h2>
+			<p><?= $char["description"] ?></p>
+			<!-- Toggle visibility -->
+			<?php if($role == 'gm'){ ?>
+				<form method="POST" action="location.php">
+					<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&toggle&character&<?=$char["ID"]?>">
+						<?= $char["visible"] ? "Hide from Players" : "Reveal to Players" ?>
+					</button>
+				</form>
+			<?php } ?>
+		</div>
+	<?php } ?>
+
+	<!-- NPCs -->
+	<h2 class="section-label">NPCs
+		<?php if($role == "gm"){ ?>
+			<button onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">+ Add</button>
+			<form method="POST" action="location.php" style="display:none;">
+				<input type="text" name="name" placeholder="Name" required>
+				<input type="text" name="description" placeholder="Description">
+				<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&add&npc">Save</button>
+				<button type="button" onclick="this.parentElement.style.display='none'; this.parentElement.previousElementSibling.style.display='inline';">Cancel</button>
+			</form>
+		<?php } ?>
+	</h2>
+	<?php foreach ($items["npcs"] as $char) { ?>
+		<div class="toy-card">
+			<form method="POST" action="char.php">
+				<button type="submit" name="msg" value="<?=$char["ID"]?>&<?=$role?>">
+					<img src="<?= $char["img_src"] ?>" alt="<?= $char["name"] ?>">
+				</button>
+			</form>
+			<h2><?= $char["name"] ?></h2>
+			<p><?= $char["description"] ?></p>
+			<!-- Toggle visibility -->
+			<?php if($role == 'gm'){ ?>
+				<form method="POST" action="location.php">
+					<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&toggle&character&<?=$char["ID"]?>">
+						<?= $char["visible"] ? "Hide from Players" : "Reveal to Players" ?>
+					</button>
+				</form>
+			<?php } ?>
+		</div>
+	<?php } ?>
+
+	<!-- Props -->
+	<h2 class="section-label">Props
+		<?php if($role == "gm"){ ?>
+			<button onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">+ Add</button>
+			<form method="POST" action="location.php" style="display:none;">
+				<input type="text" name="name" placeholder="Name" required>
+				<input type="text" name="description" placeholder="Description">
+				<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&add&prop">Save</button>
+				<button type="button" onclick="this.parentElement.style.display='none'; this.parentElement.previousElementSibling.style.display='inline';">Cancel</button>
+			</form>
+		<?php } ?>
+	</h2>
 	<?php foreach ($items["props"] as $prop) { ?>
-		<form class="toy-card" method="POST" action="prop.php">
-			<button type="submit" name="msg" value="<?=$prop["ID"]?>&<?=$role?>">
-				<img src="<?= $prop["img_src"] ?>" alt="<?= $prop["name"] ?>">
-			</button>
+		<div class="toy-card">
+			<form method="POST" action="prop.php">
+				<button type="submit" name="msg" value="<?=$prop["ID"]?>&<?=$role?>">
+					<img src="<?= $prop["img_src"] ?>" alt="<?= $prop["name"] ?>">
+				</button>
+			</form>
 			<h2><?= $prop["name"] ?></h2>
 			<p><?= $prop["description"] ?></p>
-		</form>
+			<!-- Toggle visibility -->
+			<?php if($role == 'gm'){ ?>
+				<form method="POST" action="location.php">
+					<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&toggle&prop&<?=$prop["ID"]?>">
+						<?= $prop["visible"] ? "Hide from Players" : "Reveal to Players" ?>
+					</button>
+				</form>
+			<?php } ?>
+		</div>
 	<?php } ?>
 
 </section>
