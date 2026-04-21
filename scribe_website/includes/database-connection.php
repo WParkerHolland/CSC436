@@ -2,12 +2,12 @@
 
 $type     = 'mysql';                             // Type of database
 $server   = '192.185.2.183';                    // Server the database is on
-$db       = 'parkerho_noteTracker';     // Name of the database
+$db       = 'loganmcc_scribe';     // Name of the database
 $port     = '3306';                           // Port is usually 3306 in Hostgator
 $charset  = 'utf8mb4';                       // UTF-8 encoding using 4 bytes of data per char
 
-$username = 'parkerho_user';     // Enter YOUR cPanel username and user here
-$password = 'iHaveToPushThis';           // Enter YOUR user password here
+$username = 'loganmcc_scribe_user';     // Enter YOUR cPanel username and user here
+$password = 'zarjadreymuun';           // Enter YOUR user password here
 
 
 // Array containing options for configuring PDO

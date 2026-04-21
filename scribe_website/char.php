@@ -116,7 +116,7 @@
 				<p type="text" id="partyNotes"><?=$item["partyNotes"]?></p>
 
                 <!-- Player specific info -->
-                <?php if ($item["playedBy"]) { ?>
+                <?php if ($item["playedBy"] !== null) { ?>
                     <br />
                     <h3>Player Information</h3>
                     <p><strong>Played By:</strong> <?= $item["playedBy"] ?></p>
@@ -127,7 +127,7 @@
                 <?php } ?>
 
                 <!-- Creature specific info -->
-                <?php if ($item["population"]) { ?>
+                <?php if ($item["population"] !== null) { ?>
                     <br />
                     <h3>Species Information</h3>
                     <label for="population">Population:</label>
@@ -137,7 +137,7 @@
                 <?php } ?>
 
                 <!-- NPC specific info -->
-                <?php if ($item["occupation"]) { ?>
+                <?php if ($item["occupation"] !== null) { ?>
                     <br />
                     <h3>NPC Information</h3>
                     <label for="occupation">Occupation:</label>
