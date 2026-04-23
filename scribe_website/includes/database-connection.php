@@ -18,12 +18,13 @@ $options  = [
 ];
 
 
-$dsn = "$type:host=$server;dbname=$db;port=$port;charset=$charset"; // Create DSN 
-try {                                                              // Try connecting to the db
-    $pdo = new PDO($dsn, $username, $password, $options);         // Create a new PDO instance
-} 
-catch (PDOException $e) {                  // Catch any exceptions that occur during connection
-    throw new PDOException($e->getMessage(), $e->getCode());    // Re-throw exception
+
+$dsn = "$type:host=$server;dbname=$db;port=$port;charset=$charset";
+
+try {
+    $pdo = new PDO($dsn, $username, $password, $options);
+} catch (PDOException $e) {
+    throw new PDOException($e->getMessage(), $e->getCode());
 }
 
 /*

@@ -38,6 +38,17 @@
 <section class="toy-catalog">
 	<h2 class="section-label">Campaigns</h2>
 
+	<div style="margin-bottom: 10px;">
+		<button onclick="toggleCampaignForm()" style="padding:5px 10px; font-size:14px;">
+			+ New Campaign
+		</button>
+	</div>
+
+	<form id="campaignForm" action="create_campaign.php" method="POST" style="display:none; margin-top:5px;">
+		<input type="text" name="campaign_name" placeholder="New Campaign Name" required style="padding:5px;">
+		<button type="submit" style="padding:5px 10px;">Create</button>
+	</form>
+
 	<?php foreach ($worlds as $world) { ?>
 
 		<!-- LOCATION CARD START -->
@@ -67,5 +78,16 @@
 	<?php } ?>
 
 </section>
+
+<script>
+function toggleCampaignForm() {
+	var form = document.getElementById("campaignForm");
+	if (form.style.display === "none") {
+		form.style.display = "block";
+	} else {
+		form.style.display = "none";
+	}
+}
+</script>
 
 <?php include 'includes/footer.php'; ?>
