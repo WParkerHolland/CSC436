@@ -2,15 +2,17 @@
 	require_once('includes/database-connection.php');
 
 	$loc_ID;
+	$world_ID;
 	$role;
 	
 	if($_SERVER["REQUEST_METHOD"] == "POST"){
 		$msg = explode('&', $_POST['msg']);
 		$loc_ID = $msg[0];
 		$role = $msg[1];
+		$world_ID = $msg[2];
 
-		if(count($msg) >= 3){
-			switch($msg[2]){
+		if(count($msg) >= 4){
+			switch($msg[3]){
 				case 'back':
 					$sql = "SELECT container FROM Contains WHERE Contains.containee = :ID;";
 					$result = pdo($pdo, $sql, [':ID' => $loc_ID])->fetch();
@@ -43,7 +45,7 @@
 					}
 				break;
 				case 'add':
-					$type = $msg[3];
+					$type = $msg[4];
 					switch($type){
 						case 'location':
 							$sql = "INSERT INTO Locations (name, description, img_src) VALUES (:name, :description, :img_src)";
@@ -80,8 +82,8 @@
 					}
 				break;
 				case 'toggle':
-					$type = $msg[3];
-					$entryID = $msg[4];
+					$type = $msg[4];
+					$entryID = $msg[5];
 					switch($type){
 						case 'location':
 							$sql = "UPDATE Locations SET visible = NOT visible WHERE ID = :ID";
@@ -146,7 +148,7 @@ $items = get_nested_entries($pdo, $loc_ID, $role);
 
 <div class="location-header">
 	<form method="POST" action="location.php">
-		<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&back">Back</button>
+		<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&<?=$world_ID?>&back">Back</button>
 		<?php if($role == "player"){ ?>
 			<h1><?= $items["location"]["name"] ?></h1>	
 			<p><?= $items["location"]["description"] ?></p>
@@ -162,7 +164,7 @@ $items = get_nested_entries($pdo, $loc_ID, $role);
 			<label for="partyNotes">Party's Notes:</label>
 			<input type="text" value="<?=$items["location"]["partyNotes"]?>" id="partyNotes" disabled>
 		<?php } ?>
-		<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&edit">Save Changes</button>
+		<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&<?=$world_ID?>&edit">Save Changes</button>
 	</form>
 </div>
 
@@ -175,7 +177,7 @@ $items = get_nested_entries($pdo, $loc_ID, $role);
 			<form method="POST" action="location.php" style="display:none;">
 				<input type="text" name="name" placeholder="Name" required>
 				<input type="text" name="description" placeholder="Description">
-				<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&add&location">Save</button>
+				<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&<?=$world_ID?>&add&location">Save</button>
 				<button type="button" onclick="this.parentElement.style.display='none'; this.parentElement.previousElementSibling.style.display='inline';">Cancel</button>
 			</form>
 		<?php } ?>
@@ -183,7 +185,7 @@ $items = get_nested_entries($pdo, $loc_ID, $role);
 	<?php foreach ($items["sublocations"] as $sub) { ?>
 		<div class="toy-card">
 			<form method="POST" action="location.php">
-				<button type="submit" name="msg" value="<?=$sub["ID"]?>&<?=$role?>">
+				<button type="submit" name="msg" value="<?=$sub["ID"]?>&<?=$role?>&<?=$world_ID?>">
 					<img src="<?= $sub["img_src"] ?>" alt="<?= $sub["name"] ?>">
 				</button>
 			</form>
@@ -192,7 +194,7 @@ $items = get_nested_entries($pdo, $loc_ID, $role);
 			<!-- Toggle visibility -->
 			<?php if($role == 'gm'){ ?>
 				<form method="POST" action="location.php">
-					<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&toggle&location&<?=$sub["ID"]?>">
+					<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&<?=$world_ID?>&toggle&location&<?=$sub["ID"]?>">
 						<?= $sub["visible"] ? "Hide from Players" : "Reveal to Players" ?>
 					</button>
 				</form>
@@ -207,7 +209,7 @@ $items = get_nested_entries($pdo, $loc_ID, $role);
 			<form method="POST" action="location.php" style="display:none;">
 				<input type="text" name="name" placeholder="Name" required>
 				<input type="text" name="description" placeholder="Description">
-				<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&add&player">Save</button>
+				<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&<?=$world_ID?>&add&player">Save</button>
 				<button type="button" onclick="this.parentElement.style.display='none'; this.parentElement.previousElementSibling.style.display='inline';">Cancel</button>
 			</form>
 		<?php } ?>
@@ -215,7 +217,7 @@ $items = get_nested_entries($pdo, $loc_ID, $role);
 	<?php foreach ($items["players"] as $char) { ?>
 		<div class="toy-card">
 			<form method="POST" action="char.php">
-				<button type="submit" name="msg" value="<?=$char["ID"]?>&<?=$role?>">
+				<button type="submit" name="msg" value="<?=$char["ID"]?>&<?=$role?>&<?=$world_ID?>">
 					<img src="<?= $char["img_src"] ?>" alt="<?= $char["name"] ?>">
 				</button>
 			</form>
@@ -231,7 +233,7 @@ $items = get_nested_entries($pdo, $loc_ID, $role);
 			<form method="POST" action="location.php" style="display:none;">
 				<input type="text" name="name" placeholder="Name" required>
 				<input type="text" name="description" placeholder="Description">
-				<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&add&creature">Save</button>
+				<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&<?=$world_ID?>&add&creature">Save</button>
 				<button type="button" onclick="this.parentElement.style.display='none'; this.parentElement.previousElementSibling.style.display='inline';">Cancel</button>
 			</form>
 		<?php } ?>
@@ -239,7 +241,7 @@ $items = get_nested_entries($pdo, $loc_ID, $role);
 	<?php foreach ($items["creatures"] as $char) { ?>
 		<div class="toy-card">
 			<form method="POST" action="char.php">
-				<button type="submit" name="msg" value="<?=$char["ID"]?>&<?=$role?>">
+				<button type="submit" name="msg" value="<?=$char["ID"]?>&<?=$role?>&<?=$world_ID?>">
 					<img src="<?= $char["img_src"] ?>" alt="<?= $char["name"] ?>">
 				</button>
 			</form>
@@ -248,7 +250,7 @@ $items = get_nested_entries($pdo, $loc_ID, $role);
 			<!-- Toggle visibility -->
 			<?php if($role == 'gm'){ ?>
 				<form method="POST" action="location.php">
-					<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&toggle&character&<?=$char["ID"]?>">
+					<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&<?=$world_ID?>&toggle&character&<?=$char["ID"]?>">
 						<?= $char["visible"] ? "Hide from Players" : "Reveal to Players" ?>
 					</button>
 				</form>
@@ -263,7 +265,7 @@ $items = get_nested_entries($pdo, $loc_ID, $role);
 			<form method="POST" action="location.php" style="display:none;">
 				<input type="text" name="name" placeholder="Name" required>
 				<input type="text" name="description" placeholder="Description">
-				<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&add&npc">Save</button>
+				<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&<?=$world_ID?>&add&npc">Save</button>
 				<button type="button" onclick="this.parentElement.style.display='none'; this.parentElement.previousElementSibling.style.display='inline';">Cancel</button>
 			</form>
 		<?php } ?>
@@ -271,7 +273,7 @@ $items = get_nested_entries($pdo, $loc_ID, $role);
 	<?php foreach ($items["npcs"] as $char) { ?>
 		<div class="toy-card">
 			<form method="POST" action="char.php">
-				<button type="submit" name="msg" value="<?=$char["ID"]?>&<?=$role?>">
+				<button type="submit" name="msg" value="<?=$char["ID"]?>&<?=$role?>&<?=$world_ID?>">
 					<img src="<?= $char["img_src"] ?>" alt="<?= $char["name"] ?>">
 				</button>
 			</form>
@@ -280,7 +282,7 @@ $items = get_nested_entries($pdo, $loc_ID, $role);
 			<!-- Toggle visibility -->
 			<?php if($role == 'gm'){ ?>
 				<form method="POST" action="location.php">
-					<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&toggle&character&<?=$char["ID"]?>">
+					<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&<?=$world_ID?>&toggle&character&<?=$char["ID"]?>">
 						<?= $char["visible"] ? "Hide from Players" : "Reveal to Players" ?>
 					</button>
 				</form>
@@ -295,7 +297,7 @@ $items = get_nested_entries($pdo, $loc_ID, $role);
 			<form method="POST" action="location.php" style="display:none;">
 				<input type="text" name="name" placeholder="Name" required>
 				<input type="text" name="description" placeholder="Description">
-				<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&add&prop">Save</button>
+				<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&<?=$world_ID?>&add&prop">Save</button>
 				<button type="button" onclick="this.parentElement.style.display='none'; this.parentElement.previousElementSibling.style.display='inline';">Cancel</button>
 			</form>
 		<?php } ?>
@@ -303,7 +305,7 @@ $items = get_nested_entries($pdo, $loc_ID, $role);
 	<?php foreach ($items["props"] as $prop) { ?>
 		<div class="toy-card">
 			<form method="POST" action="prop.php">
-				<button type="submit" name="msg" value="<?=$prop["ID"]?>&<?=$role?>">
+				<button type="submit" name="msg" value="<?=$prop["ID"]?>&<?=$role?>&<?=$world_ID?>">
 					<img src="<?= $prop["img_src"] ?>" alt="<?= $prop["name"] ?>">
 				</button>
 			</form>
@@ -312,7 +314,7 @@ $items = get_nested_entries($pdo, $loc_ID, $role);
 			<!-- Toggle visibility -->
 			<?php if($role == 'gm'){ ?>
 				<form method="POST" action="location.php">
-					<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&toggle&prop&<?=$prop["ID"]?>">
+					<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&<?=$world_ID?>&toggle&prop&<?=$prop["ID"]?>">
 						<?= $prop["visible"] ? "Hide from Players" : "Reveal to Players" ?>
 					</button>
 				</form>

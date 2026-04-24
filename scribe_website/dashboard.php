@@ -55,7 +55,7 @@
 		<form class="toy-card" method="POST" action="location.php">
 			<!-- TO-DO: Create a hyperlink to location.php and pass the location number as a URL parameter -->
 			<?php if ($world["role"] == "gm") { ?>
-				<button type="submit" name="msg" value="<?=$world["loc_id"]?>&gm">
+				<button type="submit" name="msg" value="<?=$world["loc_id"]?>&gm&<?=$world["loc_id"]?>">
 
 					<!-- TO-DO: Display the world image and update the alt text to the world name -->
 					<img src="<?= $world["loc_image"] ?>" alt="<?= $world["loc_name"] ?>">
@@ -64,7 +64,7 @@
 				<!-- TO-DO: Display the name of the world -->
 				<h2>Game Master: <?= $world["loc_name"] ?></h2>
 			<?php } else { ?>
-				<button name="msg" value="<?=$world["isAt"]?>&player">
+				<button name="msg" value="<?=$world["isAt"]?>&player&<?=$world["loc_id"]?>">
 
 					<!-- TO-DO: Display the character image and update the alt text to the character name -->
 					<img src="<?= $world["char_image"] ?>" alt="<?= $world["char_name"] ?>">

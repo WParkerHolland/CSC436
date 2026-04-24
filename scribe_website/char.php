@@ -1,16 +1,21 @@
 <?php
     require_once('includes/database-connection.php');
+    require_once('includes/session.php');
 
     // Reading POST request
     $char_ID;
 	$role;
+    $world_ID;
+    $locations;
 	
 	if($_SERVER["REQUEST_METHOD"] == "POST"){
 		$msg = explode('&', $_POST['msg']);
 		$char_ID = $msg[0];
 		$role = $msg[1];
+        $world_ID = $msg[2];
+        $locations = get_locations($pdo, $world_ID);
 
-        if(count($msg) > 2){
+        if(count($msg) > 3){
             // Player editing their own character
             if($role == 'player' && $_POST['name']){
                 $sql = "UPDATE Characters
@@ -49,6 +54,13 @@
                         WHERE NPCs.ID = :ID;";
                 pdo($pdo, $sql, [':opinions' => $_POST['opinions'], ':occupation' => $_POST['occupation'], ':gold' => $_POST['gold'], ':ID' => $char_ID]);
             }
+
+            if(key_exists('isAt', $_POST) && $_POST['isAt'] != 'Select Location'){
+                $sql = "UPDATE Characters
+                        SET Characters.isAt = :newLoc
+                        WHERE Characters.ID = :ID;";
+                pdo($pdo, $sql, [':newLoc' => $locations[$_POST['isAt']], ':ID' => $char_ID]);
+            }
         }
 	}
 
@@ -85,7 +97,6 @@
 
     /* TO-DO: Call function to retrieve character information */
     $item = get_char_info($pdo, $char_ID);
-
 ?>
 
 <section class="toy-details-page container">
@@ -98,7 +109,7 @@
         </div>
 
         <form method="POST" action="location.php">
-            <button type="submit" name="msg" value="<?=$char_ID?>&<?=$role?>&charBack">Back</button>
+            <button type="submit" name="msg" value="<?=$char_ID?>&<?=$role?>&<?=$world_ID?>&charBack">Back</button>
         </form>
 
         <form method="POST" action="char.php" class="toy-details">
@@ -114,6 +125,13 @@
 				<input type="text" value="<?=$item["gmNotes"]?>" id="gmNotes" name="gmNotes">
                 <label for="partyNotes">Party's Notes:</label>
 				<p type="text" id="partyNotes"><?=$item["partyNotes"]?></p>
+                <label for="isAt">Send To:</label>
+				<select name="isAt" id="isAt">
+                    <option>Select Location</option>
+                    <?php foreach($locations as $locName => $locID){ ?>
+                        <option><?= $locName ?></option>
+                    <?php } ?>
+                </select>
 
                 <!-- Player specific info -->
                 <?php if ($item["playedBy"] !== null) { ?>
@@ -201,7 +219,7 @@
                     <p><strong>Gold:</strong> <?= $item["gold"] ?></p>
                 <?php } ?>
             <?php } ?>
-            <button type="submit" name="msg" value="<?=$char_ID?>&<?=$role?>&edit">Save Changes</button>
+            <button type="submit" name="msg" value="<?=$char_ID?>&<?=$role?>&<?=$world_ID?>&edit">Save Changes</button>
         </form>
     </div>
 </section>
