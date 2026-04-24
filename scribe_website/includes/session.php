@@ -83,8 +83,8 @@ use const Dom\STRING_SIZE_ERR;
 		$locs = [];
 
 		foreach ($results as $result){
-			$locs[$result["name"]] = $result["ID"];
-			$locs = [...$locs, ...get_locations($pdo, $result["ID"])];
+			$locs[$result["locName"]] = $result["locID"];
+			$locs = [...$locs, ...get_locations($pdo, $result["locID"])];
 		}
 
 		return $locs;
