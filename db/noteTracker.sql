@@ -316,7 +316,12 @@ CREATE TABLE `Users` (
 --
 -- Dumping data for table `Users`
 --
-
+INSERT INTO `Users` (`username`, `password`) VALUES
+('George', 'password456'),
+('GM Individual', 'password000'),
+('Henry', 'password789'),
+('No Friends Larry', 'password000'),
+('Steve', 'password123');
 
 
 
