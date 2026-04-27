@@ -1,27 +1,50 @@
 <?php
     require_once('includes/database-connection.php');
+    require_once('includes/session.php');
 
     // Reading POST request
     $prop_ID;
 	$role;
+    $world_ID;
+    $locations;
+    $characters;
 	
 	if($_SERVER["REQUEST_METHOD"] == "POST"){
 		$msg = explode('&', $_POST['msg']);
 		$prop_ID = $msg[0];
 		$role = $msg[1];
+        $world_ID = $msg[2];
+        $locations = get_locations($pdo, $world_ID);
+        $characters = get_characters($pdo, $locations);
 
         // Check if msg is sent with extra 'edit' string
-		if(count($msg) == 3 && $role == 'gm'){
-			$sql =  "UPDATE Props
-					SET Props.name = :propName, Props.description = :descr, Props.gmNotes = :gmNotes, Props.itemType = :itemType, Props.rarity = :rarity, Props.quantity = :quantity
-					WHERE Props.ID = :ID;";
-			pdo($pdo, $sql, [':propName' => $_POST['name'], ':descr' => $_POST['description'], ':gmNotes' => $_POST['gmNotes'], ':itemType' => $_POST['itemType'], ':rarity' => $_POST['rarity'], ':quantity' => $_POST['quantity'],':ID' => $prop_ID]);
-		} elseif(count($msg) == 3 && $role == 'player'){
-			$sql = "UPDATE Props
-					SET Props.partyNotes = :partyNotes
-					WHERE Props.ID = :ID;";
-			pdo($pdo, $sql, [':partyNotes' => $_POST['partyNotes'], ':ID' => $prop_ID]);
-		}
+        if(count($msg) == 4){
+            if($role == 'gm'){
+                $sql =  "UPDATE Props
+                        SET Props.name = :propName, Props.description = :descr, Props.gmNotes = :gmNotes, Props.itemType = :itemType, Props.rarity = :rarity, Props.quantity = :quantity
+                        WHERE Props.ID = :ID;";
+                pdo($pdo, $sql, [':propName' => $_POST['name'], ':descr' => $_POST['description'], ':gmNotes' => $_POST['gmNotes'], ':itemType' => $_POST['itemType'], ':rarity' => $_POST['rarity'], ':quantity' => $_POST['quantity'],':ID' => $prop_ID]);
+            } elseif($role == 'player'){
+                $sql = "UPDATE Props
+                        SET Props.partyNotes = :partyNotes
+                        WHERE Props.ID = :ID;";
+                pdo($pdo, $sql, [':partyNotes' => $_POST['partyNotes'], ':ID' => $prop_ID]);
+            }
+
+            if(key_exists('isIn', $_POST) && $_POST['isIn'] != 'Select Location'){
+                $sql = "UPDATE Props
+                        SET Props.isIn = :newLoc
+                        WHERE Props.ID = :ID;";
+                pdo($pdo, $sql, [':newLoc' => $locations[$_POST['isIn']], ':ID' => $prop_ID]);
+            }
+
+            if(key_exists('owner', $_POST) && $_POST['owner'] != 'Select Character'){
+                $sql = "UPDATE Props
+                        SET Props.owner = :newOwner
+                        WHERE Props.ID = :ID;";
+                pdo($pdo, $sql, [':newOwner' => $characters[$_POST['owner']], ':ID' => $prop_ID]);
+            }
+        }
 	}
 
     /* TO-DO: Include header.php
@@ -63,7 +86,7 @@
 
         <!-- Back button -->
         <form method="POST" action="location.php">
-            <button type="submit" name="msg" value="<?=$prop_ID?>&<?=$role?>&propBack">Back</button>
+            <button type="submit" name="msg" value="<?=$prop_ID?>&<?=$role?>&<?=$world_ID?>&propBack">Back</button>
         </form>
 
         <form class="toy-details" method="POST" action="prop.php">
@@ -82,6 +105,22 @@
 				<p type="text" id="partyNotes"><?=$item["partyNotes"]?></p>
                 <label for="quantity">Quantity:</label>
 				<input type="number" value="<?=$item["quantity"]?>" id="quantity" name="quantity">
+
+                <label for="isIn">Send To:</label>
+				<select name="isIn" id="isIn">
+                    <option>Select Location</option>
+                    <?php foreach($locations as $locName => $locID){ ?>
+                        <option><?= $locName ?></option>
+                    <?php } ?>
+                </select>
+
+                <label for="owner">Give To:</label>
+				<select name="owner" id="owner">
+                    <option>Select Character</option>
+                    <?php foreach($characters as $charName => $charID){ ?>
+                        <option><?= $charName ?></option>
+                    <?php } ?>
+                </select>
             <?php } else { ?>
                 <!-- TO-DO: Display the toy name -->
                 <h1><?= $item["name"] ?></h1>
@@ -103,7 +142,7 @@
                 <label for="partyNotes">Party's Notes:</label>
 				<input type="text" value="<?=$item["partyNotes"]?>" id="partyNotes" name="partyNotes">
             <?php } ?>
-            <button type="submit" name="msg" value="<?=$prop_ID?>&<?=$role?>&edit">Save Changes</button>
+            <button type="submit" name="msg" value="<?=$prop_ID?>&<?=$role?>&<?=$world_ID?>&edit">Save Changes</button>
         </form>
     </div>
 </section>

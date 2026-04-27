@@ -2,12 +2,12 @@
 
 $type     = 'mysql';                             // Type of database
 $server   = '192.185.2.183';                    // Server the database is on
-$db       = 'loganmcc_scribe';     // Name of the database
+$db       = 'parkerho_noteTracker';     // Name of the database
 $port     = '3306';                           // Port is usually 3306 in Hostgator
 $charset  = 'utf8mb4';                       // UTF-8 encoding using 4 bytes of data per char
 
-$username = 'loganmcc_scribe_user';     // Enter YOUR cPanel username and user here
-$password = 'zarjadreymuun';           // Enter YOUR user password here
+$username = 'parkerho_user';     // Enter YOUR cPanel username and user here
+$password = 'doingSomething';           // Enter YOUR user password here
 
 
 // Array containing options for configuring PDO
@@ -18,12 +18,13 @@ $options  = [
 ];
 
 
-$dsn = "$type:host=$server;dbname=$db;port=$port;charset=$charset"; // Create DSN 
-try {                                                              // Try connecting to the db
-    $pdo = new PDO($dsn, $username, $password, $options);         // Create a new PDO instance
-} 
-catch (PDOException $e) {                  // Catch any exceptions that occur during connection
-    throw new PDOException($e->getMessage(), $e->getCode());    // Re-throw exception
+
+$dsn = "$type:host=$server;dbname=$db;port=$port;charset=$charset";
+
+try {
+    $pdo = new PDO($dsn, $username, $password, $options);
+} catch (PDOException $e) {
+    throw new PDOException($e->getMessage(), $e->getCode());
 }
 
 /*
