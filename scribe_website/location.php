@@ -214,7 +214,7 @@ $items = get_nested_entries($pdo, $loc_ID, $role);
 				<input type="text" name="name" placeholder="Character Name" required>
 				<input type="text" name="description" placeholder="Description">
 				<input type="text" name="username" placeholder="Player Username" required>
-				<button type="submit" name="msg" valloction.phpue="<?=$loc_ID?>&<?=$role?>&<?=$world_ID?>&add&player">Save</button>
+				<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&<?=$world_ID?>&add&player">Save</button>
 				<button type="button" onclick="this.parentElement.style.display='none'; this.parentElement.previousElementSibling.style.display='inline';">Cancel</button>
 			</form>
 		<?php } ?>
