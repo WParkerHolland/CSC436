@@ -58,7 +58,7 @@
 				<button type="submit" name="msg" value="<?=$world["loc_id"]?>&gm&<?=$world["loc_id"]?>">
 
 					<!-- TO-DO: Display the world image and update the alt text to the world name -->
-					<img src="<?= $world["loc_image"] ?>" alt="<?= $world["loc_name"] ?>">
+					<img src="imgs/location_default.png" alt="<?= $world["loc_name"] ?>">
 				</button>
 
 				<!-- TO-DO: Display the name of the world -->
@@ -67,7 +67,7 @@
 				<button name="msg" value="<?=$world["isAt"]?>&player&<?=$world["loc_id"]?>">
 
 					<!-- TO-DO: Display the character image and update the alt text to the character name -->
-					<img src="<?= $world["char_image"] ?>" alt="<?= $world["char_name"] ?>">
+					<img src="imgs/players_default.png" alt="<?= $world["char_name"] ?>">
 				</button>
 				<!-- TO-DO: Display the name of the character -->
 				<h2>Player: <?= $world["char_name"] ?></h2>
