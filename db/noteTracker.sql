@@ -310,19 +310,15 @@ INSERT INTO `Props` (`ID`, `isIn`, `name`, `description`, `gmNotes`, `partyNotes
 
 CREATE TABLE `Users` (
   `username` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `password` varchar(50) COLLATE utf8_unicode_ci NOT NULL
+  `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `Users`
 --
 
-INSERT INTO `Users` (`username`, `password`) VALUES
-('George', 'password456'),
-('GM Individual', 'password000'),
-('Henry', 'password789'),
-('No Friends Larry', 'password000'),
-('Steve', 'password123');
+
+
 
 -- --------------------------------------------------------
 
