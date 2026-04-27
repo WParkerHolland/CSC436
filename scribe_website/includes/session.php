@@ -50,12 +50,17 @@ use const Dom\STRING_SIZE_ERR;
           4. Returns the matching user row if found
 	*/
 	function authenticate(PDO $pdo, string $username, string $password) {
-		$sql = "SELECT *
-				FROM Users
-				WHERE username= :uName and password= :uPass;";
-				
-		return pdo($pdo, $sql, ["uName" => $username, "uPass"=> $password])->fetch();
-	}
+    $sql = "SELECT * FROM Users WHERE username = :uName";
+    
+    $user = pdo($pdo, $sql, ["uName" => $username])->fetch();
+
+    // Verify hashed password
+    if ($user && password_verify($password, $user['password'])) {
+        return $user;
+    }
+
+    return false;
+}
 
 	function update_POST(string | null $locID, string | null $charID, string | null $propID, string | null $role = null){
 		$_POST['locID'] = $locID;
