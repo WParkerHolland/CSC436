@@ -317,11 +317,11 @@ CREATE TABLE `Users` (
 -- Dumping data for table `Users`
 --
 INSERT INTO `Users` (`username`, `password`) VALUES
-('George', 'password456'),
-('GM Individual', 'password000'),
-('Henry', 'password789'),
-('No Friends Larry', 'password000'),
-('Steve', 'password123');
+('George', '$2y$12$.LGrUxPef5ynxKll25SAGOdWO5gtvL109p34ShGItQWaVcaOTpBfq'),
+('GM Individual', '$2y$12$SpzkhrJh8sdTfnX7dOtlNeMjM7FZIcueFsCFUoqDeiX33Mp0JkjYu'),
+('Henry', '$2y$12$2eFy.SQ9qEwoBRbmYZUfauTRN39raP1vTfjmDXmdC6m0Q0IHReDIS'),
+('No Friends Larry', '$2y$12$C27ZHCkDCDswp9bVVAqXZeBLfIex3rqrziz8973RF6srjGopsT/.e'),
+('Steve', '$2y$12$SpzkhrJh8sdTfnX7dOtlNeMjM7FZIcueFsCFUoqDeiX33Mp0JkjYu');
 
 
 
