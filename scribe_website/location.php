@@ -72,8 +72,12 @@
 							$sql = "INSERT INTO Characters (name, description, img_src, isAt) VALUES (:name, :description, :img_src, :isAt)";
 							pdo($pdo, $sql, [':name' => $_POST['name'], ':description' => $_POST['description'], ':img_src' => 'imgs/players_default.png', ':isAt' => $loc_ID]);
 							$newID = $pdo->lastInsertId();
-							$sql = "INSERT INTO Players (ID) VALUES (:id)";
-							pdo($pdo, $sql, [':id' => $newID]);
+							// Set level=1 by default, and link the character to the user via playedBy
+							$sql = "INSERT INTO Players (ID, level, playedBy) VALUES (:id, 1, :playedBy)";
+							pdo($pdo, $sql, [':id' => $newID, ':playedBy' => $_POST['username']]);
+							// Add user to PlayingIn so they can see this campaign on their dashboard
+							$sql = "INSERT INTO PlayingIn (user, plays, world, role) VALUES (:user, :plays, :world, 'player')";
+							pdo($pdo, $sql, [':user' => $_POST['username'], ':plays' => $newID, ':world' => $world_ID]);
 						break;
 						case 'prop':
 							$sql = "INSERT INTO Props (name, description, img_src, isIn) VALUES (:name, :description, :img_src, :isIn)";
@@ -186,7 +190,7 @@ $items = get_nested_entries($pdo, $loc_ID, $role);
 		<div class="toy-card">
 			<form method="POST" action="location.php">
 				<button type="submit" name="msg" value="<?=$sub["ID"]?>&<?=$role?>&<?=$world_ID?>">
-					<img src="<?= $sub["img_src"] ?>" alt="<?= $sub["name"] ?>">
+					<img src="imgs/location_default.png" alt="<?= $sub["name"] ?>">
 				</button>
 			</form>
 			<h2><?= $sub["name"] ?></h2>
@@ -207,8 +211,9 @@ $items = get_nested_entries($pdo, $loc_ID, $role);
 		<?php if($role == "gm"){ ?>
 			<button onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">+ Add</button>
 			<form method="POST" action="location.php" style="display:none;">
-				<input type="text" name="name" placeholder="Name" required>
+				<input type="text" name="name" placeholder="Character Name" required>
 				<input type="text" name="description" placeholder="Description">
+				<input type="text" name="username" placeholder="Player Username" required>
 				<button type="submit" name="msg" value="<?=$loc_ID?>&<?=$role?>&<?=$world_ID?>&add&player">Save</button>
 				<button type="button" onclick="this.parentElement.style.display='none'; this.parentElement.previousElementSibling.style.display='inline';">Cancel</button>
 			</form>
@@ -218,7 +223,7 @@ $items = get_nested_entries($pdo, $loc_ID, $role);
 		<div class="toy-card">
 			<form method="POST" action="char.php">
 				<button type="submit" name="msg" value="<?=$char["ID"]?>&<?=$role?>&<?=$world_ID?>">
-					<img src="<?= $char["img_src"] ?>" alt="<?= $char["name"] ?>">
+					<img src="imgs/players_default.png" alt="<?= $char["name"] ?>">
 				</button>
 			</form>
 			<h2><?= $char["name"] ?></h2>
@@ -242,7 +247,7 @@ $items = get_nested_entries($pdo, $loc_ID, $role);
 		<div class="toy-card">
 			<form method="POST" action="char.php">
 				<button type="submit" name="msg" value="<?=$char["ID"]?>&<?=$role?>&<?=$world_ID?>">
-					<img src="<?= $char["img_src"] ?>" alt="<?= $char["name"] ?>">
+					<img src="imgs/creature_default.png" alt="<?= $char["name"] ?>">
 				</button>
 			</form>
 			<h2><?= $char["name"] ?></h2>
@@ -274,7 +279,7 @@ $items = get_nested_entries($pdo, $loc_ID, $role);
 		<div class="toy-card">
 			<form method="POST" action="char.php">
 				<button type="submit" name="msg" value="<?=$char["ID"]?>&<?=$role?>&<?=$world_ID?>">
-					<img src="<?= $char["img_src"] ?>" alt="<?= $char["name"] ?>">
+					<img src="imgs/npc_default.png" alt="<?= $char["name"] ?>">
 				</button>
 			</form>
 			<h2><?= $char["name"] ?></h2>
@@ -306,7 +311,7 @@ $items = get_nested_entries($pdo, $loc_ID, $role);
 		<div class="toy-card">
 			<form method="POST" action="prop.php">
 				<button type="submit" name="msg" value="<?=$prop["ID"]?>&<?=$role?>&<?=$world_ID?>">
-					<img src="<?= $prop["img_src"] ?>" alt="<?= $prop["name"] ?>">
+					<img src="imgs/props_default.png" alt="<?= $prop["name"] ?>">
 				</button>
 			</form>
 			<h2><?= $prop["name"] ?></h2>

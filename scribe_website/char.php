@@ -103,8 +103,8 @@
     <div class="toy-details-container">
         <div class="toy-image">
 
-            <!-- TO-DO: Display the toy image and update the alt text to the toy name -->
-            <img src="<?= $item["img_src"] ?>" alt="<?= $item["name"] ?>">
+            <!-- Commented out displaying image for expo -->
+            <!--<img src="<?= $item["img_src"] ?>" alt="<?= $item["name"] ?>"> -->
 
         </div>
 
